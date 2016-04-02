@@ -4,7 +4,34 @@
  */
 'use strict';
 
+var AggregateError = require('./lib/aggregate-error');
 var fs = require('fs');
+
+/** Combines one or more errors into a single error.
+ *
+ * @param {AggregateError|Error} errPrev Previous errors, if any.
+ * @param {!Error} errNew New error.
+ * @return {!AggregateError|!Error} Error which represents all errors that have
+ * occurred.  If only one error has occurred, it will be returned.  Otherwise
+ * an {@link AggregateError} including all previous errors will be returned.
+ * @private
+ */
+function combineErrors(errPrev, errNew) {
+  if (!errPrev) {
+    return errNew;
+  }
+
+  var errCombined;
+  if (errPrev instanceof AggregateError) {
+    errCombined = errPrev;
+  } else {
+    errCombined = new AggregateError();
+    errCombined.push(errPrev);
+  }
+
+  errCombined.push(errNew);
+  return errCombined;
+}
 
 /** Options for {@link nodecat}.
  *
@@ -87,29 +114,31 @@ function nodecat(fileNames, options, callback) {
     return undefined;
   }
 
+  // Error which will be returned from nodecat
+  var errNodecat = null;
   // Cleanup function for the currently piping input stream
   var inCleanup;
 
-  function allDone(err) {
+  function allDone() {
     outStream.removeListener('error', onOutError);
-    callback(err);
+    callback(errNodecat);
   }
 
   // Note:  src.unpipe is called by stream.Readable internals on dest 'error'
   function onOutError(err) {
+    errNodecat = combineErrors(errNodecat, err);
     errStream.write('nodecat: ' + err + '\n');
     if (inCleanup) {
       inCleanup();
     }
-    allDone(err);
+    allDone();
   }
   outStream.once('error', onOutError);
 
-  var firstError = null;
   var i = 0;
   function catNext() {
     if (i >= fileNames.length) {
-      allDone(firstError);
+      allDone();
       return;
     }
 
@@ -136,7 +165,9 @@ function nodecat(fileNames, options, callback) {
     }
 
     function onInError(err) {
-      firstError = firstError || err;
+      // Mark error with the name of the file which caused it
+      err.fileName = fileName;
+      errNodecat = combineErrors(errNodecat, err);
       errStream.write('nodecat: ' + fileName + ': ' + err.message + '\n');
       // There is no way to know whether more data may be emitted.
       // To be safe, unpipe to prevent interleaving data after starting next.

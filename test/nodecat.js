@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var AggregateError = require('../lib/aggregate-error');
 var BBPromise = require('bluebird');
 var assert = require('chai').assert;
 var fs = require('fs');
@@ -105,6 +106,7 @@ describe('nodecat', function() {
     nodecat(['-', filePath], options, function(err) {
       assert.strictEqual(++callCount, 1);
       assert.strictEqual(err, errTest);
+      assert.strictEqual(err.fileName, '-');
       options.outStream.end(function() {
         assert.deepEqual(options.outStream.read(), fileContent);
         assert.match(
@@ -132,6 +134,7 @@ describe('nodecat', function() {
     nodecat(['-', filePath, '-'], options, function(err) {
       assert.strictEqual(++callCount, 1);
       assert.strictEqual(err, errTest);
+      assert.strictEqual(err.fileName, '-');
       options.outStream.end(function() {
         assert.deepEqual(options.outStream.read(), fileContent);
         assert.match(
@@ -143,6 +146,97 @@ describe('nodecat', function() {
     });
     inStream.emit('error', errTest);
     inStream.end(testData);
+  });
+
+  it('returns AggregateError for multiple read errors', function(done) {
+    var errTest1 = new Error('test read error 1');
+    var errTest2 = new Error('test read error 2');
+    var errTest3 = new Error('test read error 3');
+    var stream1 = new stream.PassThrough();
+    var stream2 = new stream.PassThrough();
+    var stream3 = new stream.PassThrough();
+    var options = {
+      fileStreams: {
+        'file1.txt': stream1,
+        'file2.txt': stream2,
+        'file3.txt': stream3
+      },
+      outStream: new stream.PassThrough(),
+      errStream: new stream.PassThrough()
+    };
+    var callCount = 0;
+    nodecat(['file1.txt', 'file2.txt', 'file3.txt'], options, function(err) {
+      assert.strictEqual(++callCount, 1);
+      assert.instanceOf(err, AggregateError);
+      assert.strictEqual(err.length, 3);
+      assert.strictEqual(err[0], errTest1);
+      assert.strictEqual(err[0].fileName, 'file1.txt');
+      assert.strictEqual(err[1], errTest2);
+      assert.strictEqual(err[1].fileName, 'file2.txt');
+      assert.strictEqual(err[2], errTest3);
+      assert.strictEqual(err[2].fileName, 'file3.txt');
+
+      // Confirm that AggregateError.toString has contained messages
+      var errMsgRE = new RegExp(
+          '.*test read error 1.*\\n' +
+          '.*test read error 2.*\\n' +
+          '.*test read error 3.*\\n.*');
+      assert.match(String(err), errMsgRE);
+
+      options.outStream.end(function() {
+        assert.deepEqual(options.outStream.read(), null);
+        var errText = String(options.errStream.read());
+        var errRE =
+          new RegExp('^nodecat: file1.txt: .*test read error 1.*\\n' +
+              'nodecat: file2.txt: .*test read error 2.*\\n' +
+              'nodecat: file3.txt: .*test read error 3.*\\n$');
+        assert.match(errText, errRE);
+        done();
+      });
+    });
+    stream1.emit('error', errTest1);
+    process.nextTick(function() {
+      stream2.emit('error', errTest2);
+      process.nextTick(function() {
+        stream3.emit('error', errTest3);
+      });
+    });
+  });
+
+  it('returns AggregateError for read and write errors', function(done) {
+    var errTestRead = new Error('test read error');
+    var errTestWrite = new Error('test write error');
+    var stream1 = new stream.PassThrough();
+    var stream2 = new stream.PassThrough();
+    var options = {
+      fileStreams: {
+        'file1.txt': stream1,
+        'file2.txt': stream2
+      },
+      outStream: new stream.PassThrough(),
+      errStream: new stream.PassThrough()
+    };
+    var callCount = 0;
+    nodecat(['file1.txt', 'file2.txt'], options, function(err) {
+      assert.strictEqual(++callCount, 1);
+      assert.instanceOf(err, AggregateError);
+      assert.strictEqual(err.length, 2);
+      assert.strictEqual(err[0], errTestRead);
+      assert.strictEqual(err[0].fileName, 'file1.txt');
+      assert.strictEqual(err[1], errTestWrite);
+      assert.strictEqual(err[1].fileName, undefined);
+      options.outStream.end(function() {
+        assert.deepEqual(options.outStream.read(), null);
+        var errText = String(options.errStream.read());
+        var errRE =
+          new RegExp('^nodecat: file1.txt: .*test read error.*\\n' +
+              'nodecat: .*test write error.*\\n$');
+        assert.match(errText, errRE);
+        done();
+      });
+    });
+    stream1.emit('error', errTestRead);
+    options.outStream.emit('error', errTestWrite);
   });
 
   it('stops writing after write error', function(done) {
