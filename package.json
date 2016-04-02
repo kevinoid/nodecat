@@ -1,22 +1,22 @@
 {
-  "name": "@kevinoid/project-template",
+  "name": "nodecat",
   "version": "0.0.1",
-  "description": "A Node.js/npm project template with codecov, coveralls, ESLint, github_changelog_generator, istanbul, JSDoc, and mocha.",
+  "description": "A Node.js implementation of cat, as specified by POSIX/SUSv3.  No frills, no buffering, no charset conversion, just cat.",
   "keywords": [
-    "project-template",
-    "template"
+    "cat",
+    "posix"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/kevinoid/node-project-template",
-  "bugs": "https://github.com/kevinoid/node-project-template/issues",
+  "homepage": "https://github.com/kevinoid/nodecat",
+  "bugs": "https://github.com/kevinoid/nodecat/issues",
   "author": "Kevin Locke <kevin@kevinlocke.name>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kevinoid/node-project-template.git"
+    "url": "https://github.com/kevinoid/nodecat.git"
   },
   "main": "index.js",
   "bin": {
-    "index": "bin/index.js"
+    "nodecat": "bin/nodecat.js"
   },
   "//": "All scripts should run in POSIX sh and Windows cmd.exe",
   "scripts": {
@@ -30,7 +30,6 @@
     "postpublish": "git -C doc push && git push --follow-tags origin master gh-pages && echo Remember to update GitHub Releases from CHANGELOG.md && echo until skywinder/github-changelog-generator#56 is fixed.",
     "postversion": "rimraf doc && git clone -b gh-pages -l -q . doc && npm run doc && git -C doc add . && git -C doc commit -n -m \"Docs for v$npm_package_version\"",
     "preversion": "git-branch-is master && travis-status -b -c -qwx && depcheck && david",
-    "start": "supervisor --quiet --no-restart-on exit --extensions js,json --ignore test --poll-interval 2000 server.js",
     "test": "npm run lint && npm run test-unit",
     "test-cov": "npm run lint && npm run test-unit-cov",
     "test-unit": "mocha --recursive test",
@@ -39,15 +38,21 @@
     "version": "github_changelog_generator -t \"$npm_config_gcg_github_token\" --future-release \"$npm_package_version\" && echo && echo === Please edit CHANGELOG.md as desired, then exit === && echo && $npm_config_shell && git commit -m \"Update CHANGELOG.md for $npm_package_version\" CHANGELOG.md",
     "version-deps": "npm install david depcheck git-branch-is travis-status"
   },
-  "dependencies": {},
+  "dependencies": {
+    "exit": "^0.1.2"
+  },
   "devDependencies": {
+    "bluebird": ">=2.0.0",
+    "chai": "^3.5.0",
     "codecov": "^1.0.1",
     "coveralls": "^2.11.6",
     "eslint": "^2.3.0",
     "eslint-config-airbnb": "^6.0.1",
     "istanbul": "^0.4.1",
     "jsdoc": "^3.4.0",
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "proxyquire": "^1.7.4",
+    "sinon": "^1.17.3"
   },
   "engines": {
     "node": ">=0.10",

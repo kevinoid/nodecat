@@ -1,48 +1,114 @@
-Project Template
-================
+Nodecat
+========
 
-[![Build status](https://img.shields.io/travis/kevinoid/project-template.svg?style=flat)](https://travis-ci.org/kevinoid/project-template)
-[![Coverage](https://img.shields.io/codecov/c/github/kevinoid/project-template.svg?style=flat)](https://codecov.io/github/kevinoid/project-template?branch=master)
-[![Dependency Status](https://img.shields.io/david/kevinoid/project-template.svg?style=flat)](https://david-dm.org/kevinoid/project-template)
-[![Supported Node Version](https://img.shields.io/node/v/@kevinoid/project-template.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/project-template)
-[![Version on NPM](https://img.shields.io/npm/v/@kevinoid/project-template.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/project-template)
+[![Build status](https://img.shields.io/travis/kevinoid/nodecat.svg?style=flat)](https://travis-ci.org/kevinoid/nodecat)
+[![Coverage](https://img.shields.io/codecov/c/github/kevinoid/nodecat.svg?style=flat)](https://codecov.io/github/kevinoid/nodecat?branch=master)
+[![Dependency Status](https://img.shields.io/david/kevinoid/nodecat.svg?style=flat)](https://david-dm.org/kevinoid/nodecat)
+[![Supported Node Version](https://img.shields.io/node/v/nodecat.svg?style=flat)](https://www.npmjs.com/package/nodecat)
+[![Version on NPM](https://img.shields.io/npm/v/nodecat.svg?style=flat)](https://www.npmjs.com/package/nodecat)
 
-A Node.js/npm project template with codecov, coveralls, ESLint,
-github\_changelog\_generator, istanbul, JSDoc, and mocha.
-
-It is the template that I am using for my own Node.js projects, which
-represents my current preferences.  I am not advocating for these choices nor
-this template specifically, although I am happy to discuss or explain any
-choices made herein.  It is being published both for my own convenience and
-in case it may be useful to others with similar tastes.
+A Node.js implementation of cat, as [specified by
+POSIX/SUSv3](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cat.html).
+No frills, no buffering, no charset conversion, just cat.
 
 ## Introductory Example
 
-```js
+```sh
+$ marked README.md | nodecat header.html - footer.html > README.html
 ```
 
 ## Features
 
+* Supports copying stdin by default or explicitly using the name `-`.
+* Copies all files byte-for-byte without requiring a valid encoding.
+* Does not buffer any input or output (beyond any buffering done by the
+  libuv/Node internals and the `stream.Readable.prototype.pipe`
+  implementation).
+* Handles both read and write errors gracefully.
+* Recognizes the `-u` option specified by POSIX (which is ignored, since
+  nodecat is always unbuffered).
+* Recognizes the `--` option delimiter, allowing filenames which begin with
+  `-` after the delimiter.
+* Asynchronous, non-blocking API to support concurrent use cases and
+  caller-provided streams.
 
 ## Installation
 
-[This package](https://www.npmjs.com/package/@kevinoid/project-template) can be
+[This package](https://www.npmjs.com/package/nodecat) can be
 installed using [npm](https://www.npmjs.com/), either globally or locally, by
 running:
 
 ```sh
-npm install @kevinoid/project-template
+npm install nodecat
 ```
 
 ## Recipes
 
+### Concatenate a filename starting with -
+
+```sh
+$ nodecat -- -unfortunate-name.html footer.html > combined.html
+```
+
+### Concatenate to `stdout` via the API
+
+```js
+var nodecat = require('nodecat');
+nodecat(
+  ['header.html', '-', 'footer.html'],
+  {fileStreams: {'-': process.stdin}},
+  function(err) {
+    if (err) {
+      console.error('Error concatenating files: ', err);
+    } else {
+      console.error('Done concatenating files.');
+    }
+  }
+);
+```
+
+### Concatenate to `stream` via the API
+
+To concatenate files into a `stream.Writable` (which may be a
+`fs.WriteStream`, `net.Socket`, `tty.WriteStream`, `stream.PassThrough`, or
+any other `stream.Writable` subtype):
+
+```js
+var nodecat = require('nodecat');
+var stream = require('stream');
+var outStream = stream.PassThrough();
+var errStream = stream.PassThrough();
+nodecat(
+  ['header.html', '-', 'footer.html'],
+  {
+    fileStreams: {'-': process.stdin},
+    outStream: outStream,
+    errStream: errStream
+  },
+  function(err) {
+    if (err) {
+      console.error('Error concatenating files: ', err);
+    } else {
+      console.error('Done concatenating files.');
+      console.error('Content:\n', String(outStream.read()));
+    }
+  }
+);
+```
+
+Note:  When `nodecat` is called on large files and `stdout` is redirected to a
+file, it may be useful to use `fs.createWriteStream('-', {fd: 1})` instead of
+`process.stdout`, which does [synchronous
+writes](https://nodejs.org/api/process.html#process_process_stdout).  Be sure
+to end the stream before exiting.
+
 More examples can be found in the [test
-specifications](https://kevinoid.github.io/project-template/specs).
+specifications](https://kevinoid.github.io/nodecat/specs).
 
 ## API Docs
 
 To use this module as a library, see the [API
-Documentation](https://kevinoid.github.io/project-template/api).
+Documentation](https://kevinoid.github.io/nodecat/api).
 
 ## Contributing
 
