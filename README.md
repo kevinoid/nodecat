@@ -120,6 +120,15 @@ significantly differing implementations, or may not be in scope for this
 project, opening an issue before writing the code can avoid frustration and
 save a lot of time and effort.
 
+## Alternatives
+
+If nodecat does not satisfy your needs, you may want to consider these
+alternatives:
+
+* [cash-cat](https://www.npmjs.com/package/cash-cat)
+* [minicat](https://www.npmjs.com/package/minicat)
+* [posix-cat](https://www.npmjs.com/package/posix-cat)
+
 ## License
 
 This package is available under the terms of the
