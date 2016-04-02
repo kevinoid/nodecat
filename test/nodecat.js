@@ -16,6 +16,15 @@ var stream = require('stream');
 var filePath = path.resolve(__dirname, '..', 'package.json');
 var fileContent = fs.readFileSync(filePath);
 
+/** Gets the number of listeners for a named event on an emitter. */
+function listenerCount(emitter, eventName) {
+  if (typeof emitter.listenerCount === 'function') {
+    return emitter.listenerCount(eventName);
+  }
+
+  return emitter.listeners(eventName).length;
+}
+
 describe('nodecat', function() {
   it('concatenates a named file to outStream', function(done) {
     var options = {
@@ -287,7 +296,7 @@ describe('nodecat', function() {
     };
     // Assert would throw without this test listener.
     inStream.on('error', function() {
-      assert.strictEqual(this.listenerCount('error'), 1);
+      assert.strictEqual(listenerCount(this, 'error'), 1);
     });
     var callCount = 0;
     nodecat(['-', filePath], options, function(err) {
@@ -321,7 +330,7 @@ describe('nodecat', function() {
     };
     // Assert would throw without this test listener.
     options.outStream.on('error', function() {
-      assert.strictEqual(this.listenerCount('error'), 1);
+      assert.strictEqual(listenerCount(this, 'error'), 1);
     });
     var callCount = 0;
     nodecat(['-'], options, function(err) {
