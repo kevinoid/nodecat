@@ -67,7 +67,7 @@ nodecat(
 );
 ```
 
-### Concatenate to `stream` via the API
+### Concatenate to a `stream` via the API
 
 To concatenate files into a `stream.Writable` (which may be a
 `fs.WriteStream`, `net.Socket`, `tty.WriteStream`, `stream.PassThrough`, or
