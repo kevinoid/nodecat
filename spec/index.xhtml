@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Specifications in Mocha</title>
+  <meta name="generator" content="Mocha &lt;https://mochajs.org/&gt;" />
+  <meta name="license" content="MIT" />
+  <meta name="copyright" content="&#169; 2016 Kevin Locke &lt;kevin@kevinlocke.name&gt;" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/highlight.js/9.1.0/styles/github.min.css" />
+  <style type="text/css">
+section section {
+  margin-left: 1em;
+}
+section section section section {
+  margin-left: 0;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="suite">
+      <h1>nodecat command</h1>
+      <dl>
+        <dt>interprets  as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets - as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets file.txt as file.txt with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -- file.txt as file.txt with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets file.txt -- as file.txt with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets file.txt -- file.txt as file.txt file.txt with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -- as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -- - as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -- -- as -- with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -u as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -u - as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets - -u - as - - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -- -u - as -u - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -u -- - as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -u -- -u - as -u - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -uu as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -uu -- -uu as -uu with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>interprets -- -a as -a with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(expectFiles),
+    expectOpts,
+    match.func
+  );
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, sinon.mock().never());
+nodecat.verify();</code></pre></dd>
+        <dt>prints error and exits for -a</dt>
+        <dd><pre><code>var outStream = new stream.PassThrough();
+var errStream = new stream.PassThrough();
+var options = {
+  outStream: outStream,
+  errStream: errStream
+};
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, options, function(err, code) {
+  assert.ifError(err);
+  assert.isAtLeast(code, 1);
+  assert.strictEqual(outStream.read(), null);
+  assert.match(String(errStream.read()), expectErrMsg);
+  done();
+});</code></pre></dd>
+        <dt>prints error and exits for --unknown</dt>
+        <dd><pre><code>var outStream = new stream.PassThrough();
+var errStream = new stream.PassThrough();
+var options = {
+  outStream: outStream,
+  errStream: errStream
+};
+var allArgs = RUNTIME_ARGS.concat(args);
+nodecatCmd(allArgs, options, function(err, code) {
+  assert.ifError(err);
+  assert.isAtLeast(code, 1);
+  assert.strictEqual(outStream.read(), null);
+  assert.match(String(errStream.read()), expectErrMsg);
+  done();
+});</code></pre></dd>
+        <dt>yields 0 for non-Error nodecat result</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(['-']),
+    match.object,
+    match.func
+  )
+  .yields(null);
+nodecatCmd([], {}, function(err, code) {
+  assert.ifError(err);
+  assert.strictEqual(code, 0);
+  done();
+});</code></pre></dd>
+        <dt>yields non-0 for Error nodecat result</dt>
+        <dd><pre><code>var errTest = new Error('test error');
+nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(['-']),
+    match.object,
+    match.func
+  )
+  .yields(errTest);
+nodecatCmd([], {}, function(err, code) {
+  // Note:  Error is not propagated, since it is fully handled by nodecat
+  assert.ifError(err);
+  assert.isAtLeast(code, 1);
+  done();
+});</code></pre></dd>
+        <dt>throws TypeError for non-function callback</dt>
+        <dd><pre><code>assert.throws(
+  function() { nodecatCmd(RUNTIME_ARGS, {}, true); },
+  TypeError,
+  /\bcallback\b/
+);</code></pre></dd>
+        <dt>yields TypeError for non-object options</dt>
+        <dd><pre><code>nodecatCmd([], true, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions\b/);
+  done();
+});</code></pre></dd>
+        <dt>yields TypeError for non-Readable in</dt>
+        <dd><pre><code>nodecatCmd([], {inStream: {}}, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions.inStream\b/);
+  done();
+});</code></pre></dd>
+        <dt>yields TypeError for non-Writable outStream</dt>
+        <dd><pre><code>nodecatCmd([], {outStream: new stream.Readable()}, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions.outStream\b/);
+  done();
+});</code></pre></dd>
+        <dt>yields TypeError for non-Writable errStream</dt>
+        <dd><pre><code>nodecatCmd([], {errStream: new stream.Readable()}, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions.errStream\b/);
+  done();
+});</code></pre></dd>
+        <dt>returns undefined when called with a function</dt>
+        <dd><pre><code>nodecat = sinon.mock()
+  .once()
+  .withArgs(
+    match(['-']),
+    match.object,
+    match.func
+  );
+var result = nodecatCmd(RUNTIME_ARGS, sinon.mock().never());
+nodecat.verify();
+assert.strictEqual(result, undefined);</code></pre></dd>
+        <section class="suite">
+          <h1>without global.Promise</h1>
+          <dl>
+            <dt>throws without a callback</dt>
+            <dd><pre><code>assert.throws(
+  function() { nodecatCmd(RUNTIME_ARGS); },
+  TypeError,
+  /\bcallback\b/
+);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>with global.Promise</h1>
+          <dl>
+            <dt>returns a Promise when called without a function</dt>
+            <dd><pre><code>nodecat = sinon.stub();
+var result = nodecatCmd(RUNTIME_ARGS);
+assert(result instanceof global.Promise);</code></pre></dd>
+            <dt>returned Promise is resolved with exit code</dt>
+            <dd><pre><code>nodecat = sinon.stub();
+var options = {
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+var result = nodecatCmd(RUNTIME_ARGS, options);
+nodecat.yield(null);
+return result.then(function(code) {
+  assert.strictEqual(code, 0);
+});</code></pre></dd>
+            <dt>returned Promise is rejected with Error</dt>
+            <dd><pre><code>nodecat = sinon.stub();
+var result = nodecatCmd(RUNTIME_ARGS, true);
+return result.then(
+  sinon.mock().never(),
+  function(err) { assert.instanceOf(err, TypeError); }
+);</code></pre></dd>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>nodecat</h1>
+      <dl>
+        <dt>concatenates a named file to outStream</dt>
+        <dd><pre><code>var options = {
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+nodecat([filePath], options, function(err) {
+  assert.ifError(err);
+  options.outStream.end(function() {
+    assert.deepEqual(options.outStream.read(), fileContent);
+    assert.strictEqual(options.errStream.read(), null);
+    done();
+  });
+});</code></pre></dd>
+        <dt>concatenates two named files to outStream</dt>
+        <dd><pre><code>var options = {
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+nodecat([filePath, filePath], options, function(err) {
+  assert.ifError(err);
+  options.outStream.end(function() {
+    assert.deepEqual(
+      options.outStream.read(),
+      Buffer.concat([fileContent, fileContent])
+    );
+    assert.strictEqual(options.errStream.read(), null);
+    done();
+  });
+});</code></pre></dd>
+        <dt>concatenates stdout to outStream</dt>
+        <dd><pre><code>var testData = new Buffer('Stuff');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+nodecat(['-'], options, function(err) {
+  assert.ifError(err);
+  options.outStream.end(function() {
+    assert.deepEqual(options.outStream.read(), testData);
+    assert.strictEqual(options.errStream.read(), null);
+    done();
+  });
+});
+inStream.end(testData);</code></pre></dd>
+        <dt>concatenates stdout once when named twice</dt>
+        <dd><pre><code>var testData = new Buffer('Stuff');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+nodecat(['-', '-'], options, function(err) {
+  assert.ifError(err);
+  options.outStream.end(function() {
+    assert.deepEqual(options.outStream.read(), testData);
+    assert.strictEqual(options.errStream.read(), null);
+    done();
+  });
+});
+inStream.end(testData);</code></pre></dd>
+        <dt>continues with next file after read error</dt>
+        <dd><pre><code>var errTest = new Error('test read error');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+var callCount = 0;
+nodecat(['-', filePath], options, function(err) {
+  assert.strictEqual(++callCount, 1);
+  assert.strictEqual(err, errTest);
+  assert.strictEqual(err.fileName, '-');
+  options.outStream.end(function() {
+    assert.deepEqual(options.outStream.read(), fileContent);
+    assert.match(
+      options.errStream.read(),
+      /^nodecat: -: .*test read error.*\n$/
+    );
+    done();
+  });
+});
+inStream.emit('error', errTest);</code></pre></dd>
+        <dt>does not retry stream after read error</dt>
+        <dd><pre><code>var testData = new Buffer('Stuff');
+var errTest = new Error('test read error');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+var callCount = 0;
+nodecat(['-', filePath, '-'], options, function(err) {
+  assert.strictEqual(++callCount, 1);
+  assert.strictEqual(err, errTest);
+  assert.strictEqual(err.fileName, '-');
+  options.outStream.end(function() {
+    assert.deepEqual(options.outStream.read(), fileContent);
+    assert.match(
+      options.errStream.read(),
+      /^nodecat: -: .*test read error.*\n$/
+    );
+    done();
+  });
+});
+inStream.emit('error', errTest);
+inStream.end(testData);</code></pre></dd>
+        <dt>returns AggregateError for multiple read errors</dt>
+        <dd><pre><code>var errTest1 = new Error('test read error 1');
+var errTest2 = new Error('test read error 2');
+var errTest3 = new Error('test read error 3');
+var stream1 = new stream.PassThrough();
+var stream2 = new stream.PassThrough();
+var stream3 = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    'file1.txt': stream1,
+    'file2.txt': stream2,
+    'file3.txt': stream3
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+var callCount = 0;
+nodecat(['file1.txt', 'file2.txt', 'file3.txt'], options, function(err) {
+  assert.strictEqual(++callCount, 1);
+  assert.instanceOf(err, AggregateError);
+  assert.strictEqual(err.length, 3);
+  assert.strictEqual(err[0], errTest1);
+  assert.strictEqual(err[0].fileName, 'file1.txt');
+  assert.strictEqual(err[1], errTest2);
+  assert.strictEqual(err[1].fileName, 'file2.txt');
+  assert.strictEqual(err[2], errTest3);
+  assert.strictEqual(err[2].fileName, 'file3.txt');
+  // Confirm that AggregateError.toString has contained messages
+  var errMsgRE = new RegExp(
+      '.*test read error 1.*\\n' +
+      '.*test read error 2.*\\n' +
+      '.*test read error 3.*\\n.*');
+  assert.match(String(err), errMsgRE);
+  options.outStream.end(function() {
+    assert.deepEqual(options.outStream.read(), null);
+    var errText = String(options.errStream.read());
+    var errRE =
+      new RegExp('^nodecat: file1.txt: .*test read error 1.*\\n' +
+          'nodecat: file2.txt: .*test read error 2.*\\n' +
+          'nodecat: file3.txt: .*test read error 3.*\\n$');
+    assert.match(errText, errRE);
+    done();
+  });
+});
+stream1.emit('error', errTest1);
+process.nextTick(function() {
+  stream2.emit('error', errTest2);
+  process.nextTick(function() {
+    stream3.emit('error', errTest3);
+  });
+});</code></pre></dd>
+        <dt>returns AggregateError for read and write errors</dt>
+        <dd><pre><code>var errTestRead = new Error('test read error');
+var errTestWrite = new Error('test write error');
+var stream1 = new stream.PassThrough();
+var stream2 = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    'file1.txt': stream1,
+    'file2.txt': stream2
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+var callCount = 0;
+nodecat(['file1.txt', 'file2.txt'], options, function(err) {
+  assert.strictEqual(++callCount, 1);
+  assert.instanceOf(err, AggregateError);
+  assert.strictEqual(err.length, 2);
+  assert.strictEqual(err[0], errTestRead);
+  assert.strictEqual(err[0].fileName, 'file1.txt');
+  assert.strictEqual(err[1], errTestWrite);
+  assert.strictEqual(err[1].fileName, undefined);
+  options.outStream.end(function() {
+    assert.deepEqual(options.outStream.read(), null);
+    var errText = String(options.errStream.read());
+    var errRE =
+      new RegExp('^nodecat: file1.txt: .*test read error.*\\n' +
+          'nodecat: .*test write error.*\\n$');
+    assert.match(errText, errRE);
+    done();
+  });
+});
+stream1.emit('error', errTestRead);
+options.outStream.emit('error', errTestWrite);</code></pre></dd>
+        <dt>stops writing after write error</dt>
+        <dd><pre><code>var testData = new Buffer('Stuff');
+var errTest = new Error('test write error');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+options.fileStreams[filePath] = {
+  pipe: sinon.mock().never()
+};
+var callCount = 0;
+nodecat(['-', filePath], options, function(err) {
+  assert.strictEqual(++callCount, 1);
+  assert.strictEqual(err, errTest);
+  process.nextTick(function() {
+    assert.strictEqual(options.outStream.read(), null);
+    assert.match(
+      options.errStream.read(),
+      /^nodecat: .*test write error.*\n/
+    );
+    done();
+  });
+});
+options.outStream.emit('error', errTest);
+inStream.end(testData);</code></pre></dd>
+        <dt>stops listening for read error after write error</dt>
+        <dd><pre><code>var testData = new Buffer('Stuff');
+var errTestRead = new Error('test read error');
+var errTestWrite = new Error('test write error');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+options.fileStreams[filePath] = {
+  pipe: sinon.mock().never()
+};
+// Assert would throw without this test listener.
+inStream.on('error', function() {
+  assert.strictEqual(listenerCount(this, 'error'), 1);
+});
+var callCount = 0;
+nodecat(['-', filePath], options, function(err) {
+  assert.strictEqual(++callCount, 1);
+  assert.strictEqual(err, errTestWrite);
+  inStream.emit('error', errTestRead);
+  setImmediate(function() {
+    assert.strictEqual(options.outStream.read(), null);
+    assert.match(
+      options.errStream.read(),
+      /^nodecat: .*test write error.*\n/
+    );
+    done();
+  });
+});
+options.outStream.emit('error', errTestWrite);
+inStream.emit('error', errTestRead);
+inStream.end(testData);</code></pre></dd>
+        <dt>stops listening for write error after callback</dt>
+        <dd><pre><code>var testData = new Buffer('Stuff');
+var errTestWrite = new Error('test write error');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+// Assert would throw without this test listener.
+options.outStream.on('error', function() {
+  assert.strictEqual(listenerCount(this, 'error'), 1);
+});
+var callCount = 0;
+nodecat(['-'], options, function(err) {
+  assert.strictEqual(++callCount, 1);
+  assert.ifError(err);
+  options.outStream.emit('error', errTestWrite);
+  setImmediate(function() {
+    assert.deepEqual(options.outStream.read(), testData);
+    assert.strictEqual(options.errStream.read(), null);
+    done();
+  });
+});
+inStream.end(testData);</code></pre></dd>
+        <dt>throws TypeError for non-function callback</dt>
+        <dd><pre><code>assert.throws(
+  function() { nodecat([], {}, true); },
+  TypeError,
+  /\bcallback\b/
+);</code></pre></dd>
+        <dt>yields TypeError for non-Array-like fileNames</dt>
+        <dd><pre><code>nodecat('file.txt', function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\bfileNames\b/);
+  done();
+});</code></pre></dd>
+        <dt>yields TypeError for non-object options</dt>
+        <dd><pre><code>nodecat([], true, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions\b/);
+  done();
+});</code></pre></dd>
+        <dt>yields TypeError for non-object options.fileStreams</dt>
+        <dd><pre><code>nodecat([], {fileStreams: true}, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions.fileStreams\b/);
+  done();
+});</code></pre></dd>
+        <dt>yields TypeError for non-Writable outStream</dt>
+        <dd><pre><code>nodecat([], {outStream: new stream.Readable()}, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions.outStream\b/);
+  done();
+});</code></pre></dd>
+        <dt>yields TypeError for non-Writable errStream</dt>
+        <dd><pre><code>nodecat([], {errStream: new stream.Readable()}, function(err) {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\boptions.errStream\b/);
+  done();
+});</code></pre></dd>
+        <dt>returns undefined when called with a function</dt>
+        <dd><pre><code>var result = nodecat([], done);
+assert.strictEqual(result, undefined);</code></pre></dd>
+        <section class="suite">
+          <h1>without global.Promise</h1>
+          <dl>
+            <dt>throws without a callback</dt>
+            <dd><pre><code>assert.throws(
+  function() { nodecat([]); },
+  TypeError,
+  /\bcallback\b/
+);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>with global.Promise</h1>
+          <dl>
+            <dt>returns a Promise when called without a function</dt>
+            <dd><pre><code>var result = nodecat([]);
+assert(result instanceof global.Promise);</code></pre></dd>
+            <dt>returned Promise is resolved after writing</dt>
+            <dd><pre><code>var ended = false;
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+setImmediate(function() {
+  ended = true;
+  inStream.end();
+});
+return nodecat(['-'], options).then(function() {
+  assert(ended);
+});</code></pre></dd>
+            <dt>returned Promise is rejected with argument Error</dt>
+            <dd><pre><code>var result = nodecat([], true);
+return result.then(
+  sinon.mock().never(),
+  function(err) { assert.instanceOf(err, TypeError); }
+);</code></pre></dd>
+            <dt>returned Promise is rejected with read Error</dt>
+            <dd><pre><code>var errTest = new Error('test error');
+var inStream = new stream.PassThrough();
+var options = {
+  fileStreams: {
+    '-': inStream
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+setImmediate(function() {
+  inStream.emit('error', errTest);
+});
+return nodecat(['-'], options).then(
+  sinon.mock().never(),
+  function(err) { assert.strictEqual(err, errTest); }
+);</code></pre></dd>
+            <dt>returned Promise is rejected with write Error</dt>
+            <dd><pre><code>var errTest = new Error('test error');
+var options = {
+  fileStreams: {
+    '-': new stream.PassThrough()
+  },
+  outStream: new stream.PassThrough(),
+  errStream: new stream.PassThrough()
+};
+setImmediate(function() {
+  options.outStream.emit('error', errTest);
+});
+return nodecat(['-'], options).then(
+  sinon.mock().never(),
+  function(err) { assert.strictEqual(err, errTest); }
+);</code></pre></dd>
+          </dl>
+        </section>
+      </dl>
+    </section>
+  </div><!-- .container -->
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/2.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/highlight.js/9.1.0/highlight.min.js"></script>
+  <script type="text/javascript">//<![CDATA[
+'use strict';
+// Adjust the nested heading level to match depth
+$('section section h1').each(function() {
+  var $this = $(this);
+  var depth = Math.min($this.parents('section').length, 6);
+  // http://stackoverflow.com/a/30059450/503410
+  $this.wrapInner(document.createElement('h' + depth)).children().unwrap();
+});
+
+// Make the tests collapsible
+var testNum = 0;
+$('dt + dd')
+  .addClass('collapse')
+  .attr('role', 'tabpanel')
+  .attr('aria-expanded', 'false')
+  .each(function() {
+    var $this = $(this);
+    var $dt = $this.prev();
+
+    ++testNum;
+    var id = 'test' + testNum;
+    var idDt = id + '-title';
+    var idDd = id + '-desc';
+
+    $dt.attr('id', idDt);
+    $this.attr('id', idDd);
+
+    $dt.wrapInner('<a role="button" data-toggle="collapse" href="#' + idDd +
+        '" aria-expanded="false" aria-controls="' + idDd + '"></a>')
+      .children()
+      .collapse();
+  });
+
+// Enable syntax highlighting for the code (which is all JavaScript)
+hljs.configure({languages: ['javascript']});
+hljs.initHighlighting();
+//]]></script>
+</body>
+</html>

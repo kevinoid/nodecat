@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Nodecat</h1><p><a href="https://travis-ci.org/kevinoid/nodecat"><img src="https://img.shields.io/travis/kevinoid/nodecat.svg?style=flat" alt="Build status"></a>
+<a href="https://codecov.io/github/kevinoid/nodecat?branch=master"><img src="https://img.shields.io/codecov/c/github/kevinoid/nodecat.svg?style=flat" alt="Coverage"></a>
+<a href="https://david-dm.org/kevinoid/nodecat"><img src="https://img.shields.io/david/kevinoid/nodecat.svg?style=flat" alt="Dependency Status"></a>
+<a href="https://www.npmjs.com/package/nodecat"><img src="https://img.shields.io/node/v/nodecat.svg?style=flat" alt="Supported Node Version"></a>
+<a href="https://www.npmjs.com/package/nodecat"><img src="https://img.shields.io/npm/v/nodecat.svg?style=flat" alt="Version on NPM"></a></p>
+<p>A Node.js implementation of cat, as <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cat.html">specified by
+POSIX/SUSv3</a>.
+No frills, no buffering, no charset conversion, just cat.</p>
+<h2>Introductory Example</h2><pre class="prettyprint source lang-sh"><code>$ marked README.md | nodecat header.html - footer.html > README.html</code></pre><h2>Features</h2><ul>
+<li>Supports copying stdin by default or explicitly using the name <code>-</code>.</li>
+<li>Copies all files byte-for-byte without requiring a valid encoding.</li>
+<li>Does not buffer any input or output (beyond any buffering done by the
+libuv/Node internals and the <code>stream.Readable.prototype.pipe</code>
+implementation).</li>
+<li>Handles both read and write errors gracefully.</li>
+<li>Recognizes the <code>-u</code> option specified by POSIX (which is ignored, since
+nodecat is always unbuffered).</li>
+<li>Recognizes the <code>--</code> option delimiter, allowing filenames which begin with
+<code>-</code> after the delimiter.</li>
+<li>Asynchronous, non-blocking API to support concurrent use cases and
+caller-provided streams.</li>
+</ul>
+<h2>Installation</h2><p><a href="https://www.npmjs.com/package/nodecat">This package</a> can be
+installed using <a href="https://www.npmjs.com/">npm</a>, either globally or locally, by
+running:</p>
+<pre class="prettyprint source lang-sh"><code>npm install nodecat</code></pre><h2>Recipes</h2><h3>Concatenate a filename starting with -</h3><pre class="prettyprint source lang-sh"><code>$ nodecat -- -unfortunate-name.html footer.html > combined.html</code></pre><h3>Concatenate to <code>stdout</code> via the API</h3><pre class="prettyprint source lang-js"><code>var nodecat = require('nodecat');
+nodecat(
+  ['header.html', '-', 'footer.html'],
+  {fileStreams: {'-': process.stdin}},
+  function(err) {
+    if (err) {
+      console.error('Error concatenating files: ', err);
+    } else {
+      console.error('Done concatenating files.');
+    }
+  }
+);</code></pre><h3>Concatenate to a <code>stream</code> via the API</h3><p>To concatenate files into a <code>stream.Writable</code> (which may be a
+<code>fs.WriteStream</code>, <code>net.Socket</code>, <code>tty.WriteStream</code>, <code>stream.PassThrough</code>, or
+any other <code>stream.Writable</code> subtype):</p>
+<pre class="prettyprint source lang-js"><code>var nodecat = require('nodecat');
+var stream = require('stream');
+var outStream = stream.PassThrough();
+var errStream = stream.PassThrough();
+nodecat(
+  ['header.html', '-', 'footer.html'],
+  {
+    fileStreams: {'-': process.stdin},
+    outStream: outStream,
+    errStream: errStream
+  },
+  function(err) {
+    if (err) {
+      console.error('Error concatenating files: ', err);
+    } else {
+      console.error('Done concatenating files.');
+      console.error('Content:\n', String(outStream.read()));
+    }
+  }
+);</code></pre><p>Note:  When <code>nodecat</code> is called on large files and <code>stdout</code> is redirected to a
+file, it may be useful to use <code>fs.createWriteStream('-', {fd: 1})</code> instead of
+<code>process.stdout</code>, which does <a href="https://nodejs.org/api/process.html#process_process_stdout">synchronous
+writes</a>.  Be sure
+to end the stream before exiting.</p>
+<p>More examples can be found in the <a href="https://kevinoid.github.io/nodecat/specs">test
+specifications</a>.</p>
+<h2>API Docs</h2><p>To use this module as a library, see the <a href="https://kevinoid.github.io/nodecat/api">API
+Documentation</a>.</p>
+<h2>Contributing</h2><p>Contributions are welcome and very much appreciated!  Please add tests to
+cover any changes and ensure <code>npm test</code> passes.</p>
+<p>If the desired change is large, complex, backwards-incompatible, can have
+significantly differing implementations, or may not be in scope for this
+project, opening an issue before writing the code can avoid frustration and
+save a lot of time and effort.</p>
+<h2>Alternatives</h2><p>If nodecat does not satisfy your needs, you may want to consider these
+alternatives:</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/cash-cat">cash-cat</a></li>
+<li><a href="https://www.npmjs.com/package/minicat">minicat</a></li>
+<li><a href="https://www.npmjs.com/package/posix-cat">posix-cat</a></li>
+</ul>
+<h2>License</h2><p>This package is available under the terms of the
+<a href="https://opensource.org/licenses/MIT">MIT License</a>.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AggregateError.html">AggregateError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#nodecat">nodecat</a></li><li><a href="global.html#nodecatCmd">nodecatCmd</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Apr 01 2016 21:24:22 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

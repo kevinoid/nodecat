@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: bin/nodecat.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: bin/nodecat.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>#!/usr/bin/env node
+/**
+ * @copyright Copyright 2016 Kevin Locke &lt;kevin@kevinlocke.name>
+ * @license MIT
+ */
+'use strict';
+
+var exit = require('exit');
+var nodecat = require('..');
+
+function usage() {
+  return 'usage: nodecat [-u] [file...]\n';
+}
+
+function parseArgs(args) {
+  var dashdash = false;
+
+  return args.slice(2).filter(function(arg) {
+    if (dashdash || arg === '-' || arg[0] !== '-') {
+      // Non-option argument
+      return true;
+    }
+
+    if (arg === '--') {
+      // XBD non-option argument delimiter
+      dashdash = true;
+      return false;
+    }
+
+    if (/^-u+$/.test(arg)) {
+      // POSIX/SUSv3 -u unbuffered I/O option
+      // Node output is already unbuffered, so -u option is ignored
+      return false;
+    }
+
+    throw new Error('illegal option -- ' + arg);
+  });
+}
+
+/** Options for command entry points.
+ *
+ * @typedef {{
+ *   inStream: (stream.Readable|undefined),
+ *   outStream: (stream.Writable|undefined),
+ *   errStream: (stream.Writable|undefined)
+ * }} CommandOptions
+ * @property {stream.Readable=} inStream Stream from which the file named '-'
+ * (also the default if no file names are given) is read.
+ * (default: &lt;code>process.stdin&lt;/code>)
+ * @property {stream.Writable=} outStream Stream to which output is written.
+ * (default: &lt;code>process.stdout&lt;/code>)
+ * @property {stream.Writable=} errStream Stream to which errors (and
+ * non-output status messages) are written.
+ * (default: &lt;code>process.stderr&lt;/code>)
+ */
+// var CommandOptions;
+
+/** Entry point for this command.
+ *
+ * @param {!Array&lt;string>} args Command-line arguments.
+ * @param {CommandOptions=} options Options.
+ * @param {?function(Error, number=)=}
+ * callback Callback for the exit code or an &lt;code>Error&lt;/code>.  Required if
+ * &lt;code>global.Promise&lt;/code> is not defined.
+ * @return {Promise&lt;number>|undefined} If &lt;code>callback&lt;/code> is not given
+ * and &lt;code>global.Promise&lt;/code> is defined, a &lt;code>Promise&lt;/code> with the
+ * exit code or &lt;code>Error&lt;/code>.
+ */
+function nodecatCmd(args, options, callback) {
+  if (!callback &amp;&amp; typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+
+  if (!callback &amp;&amp; typeof Promise === 'function') {
+    // eslint-disable-next-line no-undef
+    return new Promise(function(resolve, reject) {
+      nodecatCmd(args, options, function(err, result) {
+        if (err) { reject(err); } else { resolve(result); }
+      });
+    });
+  }
+
+  if (typeof callback !== 'function') {
+    throw new TypeError('callback must be a function');
+  }
+
+  try {
+    if (options &amp;&amp; typeof options !== 'object') {
+      throw new TypeError('options must be an object');
+    }
+
+    options = {
+      inStream: (options &amp;&amp; options.inStream) || process.stdin,
+      outStream: (options &amp;&amp; options.outStream) || process.stdout,
+      errStream: (options &amp;&amp; options.errStream) || process.stderr
+    };
+
+    if (!options.inStream || typeof options.inStream.pipe !== 'function') {
+      throw new TypeError('options.inStream must be a stream.Readable');
+    }
+    if (!options.outStream || typeof options.outStream.write !== 'function') {
+      throw new TypeError('options.outStream must be a stream.Writable');
+    }
+    if (!options.errStream || typeof options.errStream.write !== 'function') {
+      throw new TypeError('options.errStream must be a stream.Writable');
+    }
+  } catch (err) {
+    process.nextTick(function() {
+      callback(err);
+    });
+    return undefined;
+  }
+
+  var fileNames;
+  try {
+    fileNames = parseArgs(args);
+  } catch (errArgs) {
+    options.errStream.write('nodecat: ' + errArgs.message + '\n' + usage());
+    process.nextTick(function() { callback(null, 1); });
+    return undefined;
+  }
+
+  if (fileNames.length === 0) {
+    // Process stdin by default
+    fileNames = ['-'];
+  }
+
+  var catOptions = {
+    errStream: options.errStream,
+    fileStreams: {
+      '-': options.inStream
+    },
+    outStream: options.outStream
+  };
+  nodecat(fileNames, catOptions, function(err) {
+    // Note:  Error message, if any, was printed when it occurred
+    callback(null, err ? 1 : 0);
+  });
+  return undefined;
+}
+
+module.exports = nodecatCmd;
+
+if (require.main === module) {
+  // This file was invoked directly.
+  /* eslint-disable no-process-exit */
+  var mainOptions = {
+    inStream: process.stdin,
+    outStream: process.stdout,
+    errStream: process.stderr
+  };
+  nodecatCmd(process.argv, mainOptions, function(err, code) {
+    if (err) {
+      if (err.stdout) { process.stdout.write(err.stdout); }
+      if (err.stderr) { process.stderr.write(err.stderr); }
+      process.stderr.write('nodecat: ' + err.name + ': ' + err.message + '\n');
+
+      code = typeof err.code === 'number' ? err.code : 1;
+    }
+
+    exit(code);
+  });
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AggregateError.html">AggregateError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#nodecat">nodecat</a></li><li><a href="global.html#nodecatCmd">nodecatCmd</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Apr 01 2016 21:24:22 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
