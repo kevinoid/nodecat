@@ -2,6 +2,7 @@
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
+
 'use strict';
 
 var BBPromise = require('bluebird');
@@ -196,7 +197,7 @@ describe('nodecat command', function() {
 
     before('remove global Promise', function() {
       if (global.Promise) {
-        hadPromise = global.hasOwnProperty('Promise');
+        hadPromise = hasOwnProperty.call(global, 'Promise');
         oldPromise = global.Promise;
         // Note:  Deleting triggers Mocha's global leak detection.
         // Also wouldn't work if global scope had a prototype chain.
@@ -228,7 +229,7 @@ describe('nodecat command', function() {
 
     before('ensure global Promise', function() {
       if (typeof global.Promise !== 'function') {
-        hadPromise = global.hasOwnProperty('Promise');
+        hadPromise = hasOwnProperty.call(global, 'Promise');
         oldPromise = global.Promise;
         global.Promise = BBPromise;
       }

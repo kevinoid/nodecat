@@ -93,7 +93,7 @@ function nodecat(fileNames, options, callback) {
   try {
     if (!fileNames ||
         typeof fileNames !== 'object' ||
-        fileNames.length !== fileNames.length | 0) {
+        fileNames.length !== Math.floor(fileNames.length)) {
       throw new TypeError('fileNames must be an Array-like object');
     }
     if (options && typeof options !== 'object') {
@@ -143,7 +143,8 @@ function nodecat(fileNames, options, callback) {
       return;
     }
 
-    var fileName = fileNames[i++];
+    var fileName = fileNames[i];
+    i += 1;
     var callerStream = callerStreams[fileName];
     if (callerStream && callerStreamEnded[fileName]) {
       catNext();

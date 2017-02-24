@@ -2,6 +2,7 @@
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
+
 'use strict';
 
 var AggregateError = require('../lib/aggregate-error');
@@ -113,7 +114,8 @@ describe('nodecat', function() {
     };
     var callCount = 0;
     nodecat(['-', filePath], options, function(err) {
-      assert.strictEqual(++callCount, 1);
+      callCount += 1;
+      assert.strictEqual(callCount, 1);
       assert.strictEqual(err, errTest);
       assert.strictEqual(err.fileName, '-');
       options.outStream.end(function() {
@@ -141,7 +143,8 @@ describe('nodecat', function() {
     };
     var callCount = 0;
     nodecat(['-', filePath, '-'], options, function(err) {
-      assert.strictEqual(++callCount, 1);
+      callCount += 1;
+      assert.strictEqual(callCount, 1);
       assert.strictEqual(err, errTest);
       assert.strictEqual(err.fileName, '-');
       options.outStream.end(function() {
@@ -175,7 +178,8 @@ describe('nodecat', function() {
     };
     var callCount = 0;
     nodecat(['file1.txt', 'file2.txt', 'file3.txt'], options, function(err) {
-      assert.strictEqual(++callCount, 1);
+      callCount += 1;
+      assert.strictEqual(callCount, 1);
       assert.instanceOf(err, AggregateError);
       assert.strictEqual(err.length, 3);
       assert.strictEqual(err[0], errTest1);
@@ -227,7 +231,8 @@ describe('nodecat', function() {
     };
     var callCount = 0;
     nodecat(['file1.txt', 'file2.txt'], options, function(err) {
-      assert.strictEqual(++callCount, 1);
+      callCount += 1;
+      assert.strictEqual(callCount, 1);
       assert.instanceOf(err, AggregateError);
       assert.strictEqual(err.length, 2);
       assert.strictEqual(err[0], errTestRead);
@@ -264,7 +269,8 @@ describe('nodecat', function() {
     };
     var callCount = 0;
     nodecat(['-', filePath], options, function(err) {
-      assert.strictEqual(++callCount, 1);
+      callCount += 1;
+      assert.strictEqual(callCount, 1);
       assert.strictEqual(err, errTest);
       process.nextTick(function() {
         assert.strictEqual(options.outStream.read(), null);
@@ -300,7 +306,8 @@ describe('nodecat', function() {
     });
     var callCount = 0;
     nodecat(['-', filePath], options, function(err) {
-      assert.strictEqual(++callCount, 1);
+      callCount += 1;
+      assert.strictEqual(callCount, 1);
       assert.strictEqual(err, errTestWrite);
       inStream.emit('error', errTestRead);
       setImmediate(function() {
@@ -334,7 +341,8 @@ describe('nodecat', function() {
     });
     var callCount = 0;
     nodecat(['-'], options, function(err) {
-      assert.strictEqual(++callCount, 1);
+      callCount += 1;
+      assert.strictEqual(callCount, 1);
       assert.ifError(err);
       options.outStream.emit('error', errTestWrite);
       setImmediate(function() {
@@ -404,7 +412,7 @@ describe('nodecat', function() {
 
     before('remove global Promise', function() {
       if (global.Promise) {
-        hadPromise = global.hasOwnProperty('Promise');
+        hadPromise = hasOwnProperty.call(global, 'Promise');
         oldPromise = global.Promise;
         // Note:  Deleting triggers Mocha's global leak detection.
         // Also wouldn't work if global scope had a prototype chain.
@@ -436,7 +444,7 @@ describe('nodecat', function() {
 
     before('ensure global Promise', function() {
       if (typeof global.Promise !== 'function') {
-        hadPromise = global.hasOwnProperty('Promise');
+        hadPromise = hasOwnProperty.call(global, 'Promise');
         oldPromise = global.Promise;
         global.Promise = BBPromise;
       }
