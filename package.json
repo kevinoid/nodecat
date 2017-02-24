@@ -4,7 +4,11 @@
   "description": "A Node.js implementation of cat, as specified by POSIX/SUSv3.  No frills, no buffering, no charset conversion, just cat.",
   "keywords": [
     "cat",
-    "posix"
+    "cli",
+    "command",
+    "coreutils",
+    "posix",
+    "stream"
   ],
   "license": "MIT",
   "homepage": "https://github.com/kevinoid/nodecat",
