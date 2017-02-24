@@ -55,7 +55,7 @@
     "eslint-plugin-import": "^2.2.0",
     "istanbul": "^0.4.1",
     "jsdoc": "^3.4.0",
-    "mocha": "^2.3.4",
+    "mocha": "^3.0.0",
     "node-version-check": "^2.1.1",
     "proxyquire": "^1.7.4",
     "rimraf": "^2.2.0",
