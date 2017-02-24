@@ -1,8 +1,6 @@
 Nodecat
 ========
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/kevinoid/nodecat.svg)](https://greenkeeper.io/)
-
 [![Build Status: Linux](https://img.shields.io/travis/kevinoid/nodecat/master.svg?style=flat&label=build+on+linux)](https://travis-ci.org/kevinoid/nodecat)
 [![Build Status: Windows](https://img.shields.io/appveyor/ci/kevinoid/nodecat/master.svg?style=flat&label=build+on+windows)](https://ci.appveyor.com/project/kevinoid/nodecat)
 [![Coverage](https://img.shields.io/codecov/c/github/kevinoid/nodecat.svg?style=flat)](https://codecov.io/github/kevinoid/nodecat?branch=master)
