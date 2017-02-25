@@ -8,6 +8,7 @@
 
 'use strict';
 
+var assert = require('assert');
 var exit = require('exit');
 var nodecat = require('..');
 
@@ -154,14 +155,7 @@ if (require.main === module) {
     errStream: process.stderr
   };
   nodecatCmd(process.argv, mainOptions, function(err, code) {
-    if (err) {
-      if (err.stdout) { process.stdout.write(err.stdout); }
-      if (err.stderr) { process.stderr.write(err.stderr); }
-      process.stderr.write('nodecat: ' + err.name + ': ' + err.message + '\n');
-
-      code = typeof err.code === 'number' ? err.code : 1;
-    }
-
+    assert.ifError(err);
     exit(code);
   });
 }
