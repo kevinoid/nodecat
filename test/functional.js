@@ -44,8 +44,14 @@ describe('nodecat', function() {
           testContent,
           testFileContent[testFiles[1]]
         ]);
-        deepEqual(stdout, expected);
-        deepEqual(stderr, new Buffer(0));
+        if (typeof stdout === 'string') {
+          // Node 0.10 doesn't support returning Buffer
+          deepEqual(stdout, String(expected));
+          deepEqual(stderr, '');
+        } else {
+          deepEqual(stdout, expected);
+          deepEqual(stderr, new Buffer(0));
+        }
         done();
       }
     );
@@ -77,10 +83,19 @@ describe('nodecat', function() {
           testContent,
           testFileContent[testFiles[1]]
         ]);
-        deepEqual(stdout, expected);
+        if (typeof stdout === 'string') {
+          // Node 0.10 doesn't support returning Buffer
+          deepEqual(stdout, String(expected));
+        } else {
+          deepEqual(stdout, expected);
+        }
 
-        // stderr contains an error message
-        assert(/no such file/i.test(String(stderr)));
+        // stderr contains an error message with the problematic file
+        var stderrStr = String(stderr);
+        assert(
+          /nonexistent\.txt/i.test(stderrStr),
+          stderrStr + ' should contain "nonexistent.txt"'
+        );
         done();
       }
     );
