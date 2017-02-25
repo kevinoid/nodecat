@@ -23,6 +23,112 @@ section section section section {
 <body>
   <div class="container">
     <section class="suite">
+      <h1>nodecat</h1>
+      <dl>
+        <dt>concatenates files around stdin</dt>
+        <dd><pre><code>var testContent = new Buffer(256);
+for (var i = 0; i &lt; 256; i += 1) {
+  testContent[i] = i;
+}
+var proc = execFile(
+  process.execPath,
+  [
+    binPath,
+    testFiles[0],
+    '-',
+    testFiles[1]
+  ],
+  {encoding: null},
+  function(err, stdout, stderr) {
+    assert.ifError(err);
+    var expected = Buffer.concat([
+      testFileContent[testFiles[0]],
+      testContent,
+      testFileContent[testFiles[1]]
+    ]);
+    if (typeof stdout === 'string') {
+      // Node 0.10 doesn't support returning Buffer
+      deepEqual(stdout, String(expected));
+      deepEqual(stderr, '');
+    } else {
+      deepEqual(stdout, expected);
+      deepEqual(stderr, new Buffer(0));
+    }
+    done();
+  }
+);
+proc.stdin.end(testContent);</code></pre></dd>
+        <dt>exits code 1 with error message for non-existent file</dt>
+        <dd><pre><code>var testContent = new Buffer(256);
+for (var i = 0; i &lt; 256; i += 1) {
+  testContent[i] = i;
+}
+var badFilename = 'nonexistent.txt';
+var proc = execFile(
+  process.execPath,
+  [
+    binPath,
+    badFilename,
+    testFiles[0],
+    '-',
+    testFiles[1]
+  ],
+  {encoding: null},
+  function(err, stdout, stderr) {
+    assert.strictEqual(err.code, 1);
+    // stdout has data that can be read
+    var expected = Buffer.concat([
+      testFileContent[testFiles[0]],
+      testContent,
+      testFileContent[testFiles[1]]
+    ]);
+    if (typeof stdout === 'string') {
+      // Node 0.10 doesn't support returning Buffer
+      deepEqual(stdout, String(expected));
+    } else {
+      deepEqual(stdout, expected);
+    }
+    // stderr contains an error message with the problematic file
+    var stderrStr = String(stderr);
+    assert(
+      stderrStr.indexOf(badFilename) &gt;= 0,
+      '&quot;' + stderrStr + '&quot; should contain &quot;' + badFilename + '&quot;'
+    );
+    done();
+  }
+);
+proc.stdin.end(testContent);</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>AggregateError</h1>
+      <dl>
+        <dt>sets .message from argument</dt>
+        <dd><pre><code>var testMsg = 'test message';
+var a = new AggregateError(testMsg);
+assert.strictEqual(a.message, testMsg);</code></pre></dd>
+        <dt>can be instantiated without arguments</dt>
+        <dd><pre><code>var a = new AggregateError();
+assert(a.message, 'has default message');</code></pre></dd>
+        <dt>behaves like an Array</dt>
+        <dd><pre><code>var a = new AggregateError();
+assert.strictEqual(a.length, 0);
+var testError = new Error('test');
+a.push(testError);
+assert.strictEqual(a.length, 1);
+assert.strictEqual(a[0], testError);</code></pre></dd>
+        <dt>can be instantiated without new</dt>
+        <dd><pre><code>var testMsg = 'test message';
+var a = AggregateError(testMsg);
+assert(a instanceof AggregateError);
+assert.strictEqual(a.message, testMsg);</code></pre></dd>
+        <dt>inherits from Error</dt>
+        <dd><pre><code>var testMsg = 'test message';
+var a = new AggregateError(testMsg);
+assert(a instanceof Error);</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
       <h1>nodecat command</h1>
       <dl>
         <dt>interprets  as - with match(fileStreams: match(-: typeOf(&quot;object&quot;)))</dt>
@@ -446,7 +552,8 @@ var options = {
 };
 var callCount = 0;
 nodecat(['-', filePath], options, function(err) {
-  assert.strictEqual(++callCount, 1);
+  callCount += 1;
+  assert.strictEqual(callCount, 1);
   assert.strictEqual(err, errTest);
   assert.strictEqual(err.fileName, '-');
   options.outStream.end(function() {
@@ -472,7 +579,8 @@ var options = {
 };
 var callCount = 0;
 nodecat(['-', filePath, '-'], options, function(err) {
-  assert.strictEqual(++callCount, 1);
+  callCount += 1;
+  assert.strictEqual(callCount, 1);
   assert.strictEqual(err, errTest);
   assert.strictEqual(err.fileName, '-');
   options.outStream.end(function() {
@@ -504,7 +612,8 @@ var options = {
 };
 var callCount = 0;
 nodecat(['file1.txt', 'file2.txt', 'file3.txt'], options, function(err) {
-  assert.strictEqual(++callCount, 1);
+  callCount += 1;
+  assert.strictEqual(callCount, 1);
   assert.instanceOf(err, AggregateError);
   assert.strictEqual(err.length, 3);
   assert.strictEqual(err[0], errTest1);
@@ -552,7 +661,8 @@ var options = {
 };
 var callCount = 0;
 nodecat(['file1.txt', 'file2.txt'], options, function(err) {
-  assert.strictEqual(++callCount, 1);
+  callCount += 1;
+  assert.strictEqual(callCount, 1);
   assert.instanceOf(err, AggregateError);
   assert.strictEqual(err.length, 2);
   assert.strictEqual(err[0], errTestRead);
@@ -587,7 +697,8 @@ options.fileStreams[filePath] = {
 };
 var callCount = 0;
 nodecat(['-', filePath], options, function(err) {
-  assert.strictEqual(++callCount, 1);
+  callCount += 1;
+  assert.strictEqual(callCount, 1);
   assert.strictEqual(err, errTest);
   process.nextTick(function() {
     assert.strictEqual(options.outStream.read(), null);
@@ -621,7 +732,8 @@ inStream.on('error', function() {
 });
 var callCount = 0;
 nodecat(['-', filePath], options, function(err) {
-  assert.strictEqual(++callCount, 1);
+  callCount += 1;
+  assert.strictEqual(callCount, 1);
   assert.strictEqual(err, errTestWrite);
   inStream.emit('error', errTestRead);
   setImmediate(function() {
@@ -653,7 +765,8 @@ options.outStream.on('error', function() {
 });
 var callCount = 0;
 nodecat(['-'], options, function(err) {
-  assert.strictEqual(++callCount, 1);
+  callCount += 1;
+  assert.strictEqual(callCount, 1);
   assert.ifError(err);
   options.outStream.emit('error', errTestWrite);
   setImmediate(function() {
