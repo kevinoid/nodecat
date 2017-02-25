@@ -64,11 +64,12 @@ describe('nodecat', function() {
       testContent[i] = i;
     }
 
+    var badFilename = 'nonexistent.txt';
     var proc = execFile(
       process.execPath,
       [
         binPath,
-        'nonexistent.txt',
+        badFilename,
         testFiles[0],
         '-',
         testFiles[1]
@@ -93,8 +94,8 @@ describe('nodecat', function() {
         // stderr contains an error message with the problematic file
         var stderrStr = String(stderr);
         assert(
-          /nonexistent\.txt/i.test(stderrStr),
-          stderrStr + ' should contain "nonexistent.txt"'
+          stderrStr.indexOf(badFilename) >= 0,
+          '"' + stderrStr + '" should contain "' + badFilename + '"'
         );
         done();
       }
