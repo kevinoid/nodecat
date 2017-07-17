@@ -76,7 +76,9 @@
   },
   "greenkeeper": {
     "ignore": [
-      "jsdoc"
+      "chai",
+      "jsdoc",
+      "nyc"
     ]
   }
 }
