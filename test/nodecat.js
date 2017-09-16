@@ -191,9 +191,10 @@ describe('nodecat', function() {
 
       // Confirm that AggregateError.toString has contained messages
       var errMsgRE = new RegExp(
-          '.*test read error 1.*\\n' +
+        '.*test read error 1.*\\n' +
           '.*test read error 2.*\\n' +
-          '.*test read error 3.*\\n.*');
+          '.*test read error 3.*\\n.*'
+      );
       assert.match(String(err), errMsgRE);
 
       options.outStream.end(function() {
