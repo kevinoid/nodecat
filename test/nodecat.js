@@ -7,6 +7,9 @@
 
 var AggregateError = require('../lib/aggregate-error');
 var BBPromise = require('bluebird');
+// Use safe-buffer as Buffer until support for Node < 4 is dropped
+// eslint-disable-next-line no-shadow
+var Buffer = require('safe-buffer').Buffer;
 var assert = require('chai').assert;
 var fs = require('fs');
 var nodecat = require('..');
@@ -61,7 +64,7 @@ describe('nodecat', function() {
   });
 
   it('concatenates stdout to outStream', function(done) {
-    var testData = new Buffer('Stuff');
+    var testData = Buffer.from('Stuff');
     var inStream = new stream.PassThrough();
     var options = {
       fileStreams: {
@@ -82,7 +85,7 @@ describe('nodecat', function() {
   });
 
   it('concatenates stdout once when named twice', function(done) {
-    var testData = new Buffer('Stuff');
+    var testData = Buffer.from('Stuff');
     var inStream = new stream.PassThrough();
     var options = {
       fileStreams: {
@@ -131,7 +134,7 @@ describe('nodecat', function() {
   });
 
   it('does not retry stream after read error', function(done) {
-    var testData = new Buffer('Stuff');
+    var testData = Buffer.from('Stuff');
     var errTest = new Error('test read error');
     var inStream = new stream.PassThrough();
     var options = {
@@ -255,7 +258,7 @@ describe('nodecat', function() {
   });
 
   it('stops writing after write error', function(done) {
-    var testData = new Buffer('Stuff');
+    var testData = Buffer.from('Stuff');
     var errTest = new Error('test write error');
     var inStream = new stream.PassThrough();
     var options = {
@@ -287,7 +290,7 @@ describe('nodecat', function() {
   });
 
   it('stops listening for read error after write error', function(done) {
-    var testData = new Buffer('Stuff');
+    var testData = Buffer.from('Stuff');
     var errTestRead = new Error('test read error');
     var errTestWrite = new Error('test write error');
     var inStream = new stream.PassThrough();
@@ -326,7 +329,7 @@ describe('nodecat', function() {
   });
 
   it('stops listening for write error after callback', function(done) {
-    var testData = new Buffer('Stuff');
+    var testData = Buffer.from('Stuff');
     var errTestWrite = new Error('test write error');
     var inStream = new stream.PassThrough();
     var options = {

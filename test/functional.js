@@ -5,6 +5,9 @@
 
 'use strict';
 
+// Use safe-buffer as Buffer until support for Node < 4 is dropped
+// eslint-disable-next-line no-shadow
+var Buffer = require('safe-buffer').Buffer;
 var assert = require('assert');
 var execFile = require('child_process').execFile;
 var fs = require('fs');
@@ -23,7 +26,7 @@ var testFileContent = testFiles.reduce(function(contents, file) {
 
 describe('nodecat', function() {
   it('concatenates files around stdin', function(done) {
-    var testContent = new Buffer(256);
+    var testContent = Buffer.allocUnsafe(256);
     for (var i = 0; i < 256; i += 1) {
       testContent[i] = i;
     }
@@ -50,7 +53,7 @@ describe('nodecat', function() {
           deepEqual(stderr, '');
         } else {
           deepEqual(stdout, expected);
-          deepEqual(stderr, new Buffer(0));
+          deepEqual(stderr, Buffer.alloc(0));
         }
         done();
       }
@@ -59,7 +62,7 @@ describe('nodecat', function() {
   });
 
   it('exits code 1 with error message for non-existent file', function(done) {
-    var testContent = new Buffer(256);
+    var testContent = Buffer.allocUnsafe(256);
     for (var i = 0; i < 256; i += 1) {
       testContent[i] = i;
     }
