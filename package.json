@@ -57,7 +57,7 @@
     "mocha": "^3.2.0",
     "node-version-check": "^2.1.1",
     "nyc": "^10.1.2",
-    "proxyquire": "^1.7.4",
+    "proxyquire": "^2.0.0",
     "rimraf": "^2.2.0",
     "safe-buffer": "^5.1.1",
     "sinon": "^4.0.0 <4.0.2"
