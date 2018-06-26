@@ -5,9 +5,6 @@
 
 'use strict';
 
-// Use safe-buffer as Buffer until support for Node < 4 is dropped
-// eslint-disable-next-line no-shadow
-const Buffer = require('safe-buffer').Buffer;
 const assert = require('assert');
 const execFile = require('child_process').execFile;
 const fs = require('fs');

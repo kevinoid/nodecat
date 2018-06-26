@@ -5,7 +5,6 @@
 
 'use strict';
 
-const BBPromise = require('bluebird');
 const assert = require('chai').assert;
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
@@ -192,83 +191,31 @@ describe('nodecat command', () => {
     assert.strictEqual(result, undefined);
   });
 
-  describe('without global.Promise', () => {
-    let hadPromise, oldPromise;
+  it('returns a Promise when called without a function', () => {
+    nodecat = sinon.stub();
+    const result = nodecatCmd(RUNTIME_ARGS);
+    assert(result instanceof global.Promise);
+  });
 
-    before('remove global Promise', () => {
-      if (global.Promise) {
-        hadPromise = hasOwnProperty.call(global, 'Promise');
-        oldPromise = global.Promise;
-        // Note:  Deleting triggers Mocha's global leak detection.
-        // Also wouldn't work if global scope had a prototype chain.
-        global.Promise = undefined;
-      }
-    });
-
-    after('restore global Promise', () => {
-      if (oldPromise) {
-        if (hadPromise) {
-          global.Promise = oldPromise;
-        } else {
-          delete global.Promise;
-        }
-      }
-    });
-
-    it('throws without a callback', () => {
-      assert.throws(
-        () => { nodecatCmd(RUNTIME_ARGS); },
-        TypeError,
-        /\bcallback\b/
-      );
+  it('returned Promise is resolved with exit code', () => {
+    nodecat = sinon.stub();
+    const options = {
+      outStream: new stream.PassThrough(),
+      errStream: new stream.PassThrough()
+    };
+    const result = nodecatCmd(RUNTIME_ARGS, options);
+    nodecat.yield(null);
+    return result.then((code) => {
+      assert.strictEqual(code, 0);
     });
   });
 
-  describe('with global.Promise', () => {
-    let hadPromise, oldPromise;
-
-    before('ensure global Promise', () => {
-      if (typeof global.Promise !== 'function') {
-        hadPromise = hasOwnProperty.call(global, 'Promise');
-        oldPromise = global.Promise;
-        global.Promise = BBPromise;
-      }
-    });
-
-    after('restore global Promise', () => {
-      if (hadPromise === true) {
-        global.Promise = oldPromise;
-      } else if (hadPromise === false) {
-        delete global.Promise;
-      }
-    });
-
-    it('returns a Promise when called without a function', () => {
-      nodecat = sinon.stub();
-      const result = nodecatCmd(RUNTIME_ARGS);
-      assert(result instanceof global.Promise);
-    });
-
-    it('returned Promise is resolved with exit code', () => {
-      nodecat = sinon.stub();
-      const options = {
-        outStream: new stream.PassThrough(),
-        errStream: new stream.PassThrough()
-      };
-      const result = nodecatCmd(RUNTIME_ARGS, options);
-      nodecat.yield(null);
-      return result.then((code) => {
-        assert.strictEqual(code, 0);
-      });
-    });
-
-    it('returned Promise is rejected with Error', () => {
-      nodecat = sinon.stub();
-      const result = nodecatCmd(RUNTIME_ARGS, true);
-      return result.then(
-        sinon.mock().never(),
-        (err) => { assert.instanceOf(err, TypeError); }
-      );
-    });
+  it('returned Promise is rejected with Error', () => {
+    nodecat = sinon.stub();
+    const result = nodecatCmd(RUNTIME_ARGS, true);
+    return result.then(
+      sinon.mock().never(),
+      (err) => { assert.instanceOf(err, TypeError); }
+    );
   });
 });

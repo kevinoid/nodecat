@@ -77,7 +77,6 @@ function nodecatCmd(args, options, callback) {
   }
 
   if (!callback && typeof Promise === 'function') {
-    // eslint-disable-next-line no-undef
     return new Promise(((resolve, reject) => {
       nodecatCmd(args, options, (err, result) => {
         if (err) { reject(err); } else { resolve(result); }

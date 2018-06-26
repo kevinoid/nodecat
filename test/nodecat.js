@@ -5,10 +5,6 @@
 
 'use strict';
 
-const BBPromise = require('bluebird');
-// Use safe-buffer as Buffer until support for Node < 4 is dropped
-// eslint-disable-next-line no-shadow
-const Buffer = require('safe-buffer').Buffer;
 const assert = require('chai').assert;
 const fs = require('fs');
 const nodecat = require('..');
@@ -412,124 +408,72 @@ describe('nodecat', () => {
     assert.strictEqual(result, undefined);
   });
 
-  describe('without global.Promise', () => {
-    let hadPromise, oldPromise;
+  it('returns a Promise when called without a function', () => {
+    const result = nodecat([]);
+    assert(result instanceof global.Promise);
+  });
 
-    before('remove global Promise', () => {
-      if (global.Promise) {
-        hadPromise = hasOwnProperty.call(global, 'Promise');
-        oldPromise = global.Promise;
-        // Note:  Deleting triggers Mocha's global leak detection.
-        // Also wouldn't work if global scope had a prototype chain.
-        global.Promise = undefined;
-      }
+  it('returned Promise is resolved after writing', () => {
+    let ended = false;
+    const inStream = new stream.PassThrough();
+    const options = {
+      fileStreams: {
+        '-': inStream
+      },
+      outStream: new stream.PassThrough(),
+      errStream: new stream.PassThrough()
+    };
+    setImmediate(() => {
+      ended = true;
+      inStream.end();
     });
-
-    after('restore global Promise', () => {
-      if (oldPromise) {
-        if (hadPromise) {
-          global.Promise = oldPromise;
-        } else {
-          delete global.Promise;
-        }
-      }
-    });
-
-    it('throws without a callback', () => {
-      assert.throws(
-        () => { nodecat([]); },
-        TypeError,
-        /\bcallback\b/
-      );
+    return nodecat(['-'], options).then(() => {
+      assert(ended);
     });
   });
 
-  describe('with global.Promise', () => {
-    let hadPromise, oldPromise;
+  it('returned Promise is rejected with argument Error', () => {
+    const result = nodecat([], true);
+    return result.then(
+      sinon.mock().never(),
+      (err) => { assert.instanceOf(err, TypeError); }
+    );
+  });
 
-    before('ensure global Promise', () => {
-      if (typeof global.Promise !== 'function') {
-        hadPromise = hasOwnProperty.call(global, 'Promise');
-        oldPromise = global.Promise;
-        global.Promise = BBPromise;
-      }
+  it('returned Promise is rejected with read Error', () => {
+    const errTest = new Error('test error');
+    const inStream = new stream.PassThrough();
+    const options = {
+      fileStreams: {
+        '-': inStream
+      },
+      outStream: new stream.PassThrough(),
+      errStream: new stream.PassThrough()
+    };
+    setImmediate(() => {
+      inStream.emit('error', errTest);
     });
+    return nodecat(['-'], options).then(
+      sinon.mock().never(),
+      (err) => { assert.strictEqual(err, errTest); }
+    );
+  });
 
-    after('restore global Promise', () => {
-      if (hadPromise === true) {
-        global.Promise = oldPromise;
-      } else if (hadPromise === false) {
-        delete global.Promise;
-      }
+  it('returned Promise is rejected with write Error', () => {
+    const errTest = new Error('test error');
+    const options = {
+      fileStreams: {
+        '-': new stream.PassThrough()
+      },
+      outStream: new stream.PassThrough(),
+      errStream: new stream.PassThrough()
+    };
+    setImmediate(() => {
+      options.outStream.emit('error', errTest);
     });
-
-    it('returns a Promise when called without a function', () => {
-      const result = nodecat([]);
-      assert(result instanceof global.Promise);
-    });
-
-    it('returned Promise is resolved after writing', () => {
-      let ended = false;
-      const inStream = new stream.PassThrough();
-      const options = {
-        fileStreams: {
-          '-': inStream
-        },
-        outStream: new stream.PassThrough(),
-        errStream: new stream.PassThrough()
-      };
-      setImmediate(() => {
-        ended = true;
-        inStream.end();
-      });
-      return nodecat(['-'], options).then(() => {
-        assert(ended);
-      });
-    });
-
-    it('returned Promise is rejected with argument Error', () => {
-      const result = nodecat([], true);
-      return result.then(
-        sinon.mock().never(),
-        (err) => { assert.instanceOf(err, TypeError); }
-      );
-    });
-
-    it('returned Promise is rejected with read Error', () => {
-      const errTest = new Error('test error');
-      const inStream = new stream.PassThrough();
-      const options = {
-        fileStreams: {
-          '-': inStream
-        },
-        outStream: new stream.PassThrough(),
-        errStream: new stream.PassThrough()
-      };
-      setImmediate(() => {
-        inStream.emit('error', errTest);
-      });
-      return nodecat(['-'], options).then(
-        sinon.mock().never(),
-        (err) => { assert.strictEqual(err, errTest); }
-      );
-    });
-
-    it('returned Promise is rejected with write Error', () => {
-      const errTest = new Error('test error');
-      const options = {
-        fileStreams: {
-          '-': new stream.PassThrough()
-        },
-        outStream: new stream.PassThrough(),
-        errStream: new stream.PassThrough()
-      };
-      setImmediate(() => {
-        options.outStream.emit('error', errTest);
-      });
-      return nodecat(['-'], options).then(
-        sinon.mock().never(),
-        (err) => { assert.strictEqual(err, errTest); }
-      );
-    });
+    return nodecat(['-'], options).then(
+      sinon.mock().never(),
+      (err) => { assert.strictEqual(err, errTest); }
+    );
   });
 });
