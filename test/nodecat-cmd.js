@@ -5,23 +5,23 @@
 
 'use strict';
 
-var BBPromise = require('bluebird');
-var assert = require('chai').assert;
-var proxyquire = require('proxyquire');
-var sinon = require('sinon');
-var stream = require('stream');
+const BBPromise = require('bluebird');
+const assert = require('chai').assert;
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+const stream = require('stream');
 
-var match = sinon.match;
+const match = sinon.match;
 
 // Simulate arguments passed by the node runtime
-var RUNTIME_ARGS = ['node', 'nodecat'];
+const RUNTIME_ARGS = ['node', 'nodecat'];
 
-describe('nodecat command', function() {
+describe('nodecat command', () => {
   // In order to test the command parsing module in isolation, we need to mock
   // the nodecat module function.  To use different mocks for each test without
   // re-injecting the module repeatedly, we use this shared variable.
-  var nodecat;
-  var nodecatCmd = proxyquire(
+  let nodecat;
+  const nodecatCmd = proxyquire(
     '../bin/nodecat',
     {
       '..': function nodecatInjected() {
@@ -31,14 +31,14 @@ describe('nodecat command', function() {
   );
 
   // Ensure that expectations are not carried over between tests
-  beforeEach(function() {
+  beforeEach(() => {
     nodecat = sinon.expectation.create('nodecat').never();
   });
 
   function expectArgsAs(args, expectFiles, expectOpts) {
-    var msg = 'interprets ' + args.join(' ') + ' as ' +
-      expectFiles.join(' ') + ' with ' + expectOpts;
-    it(msg, function() {
+    const msg = `interprets ${args.join(' ')} as ${
+      expectFiles.join(' ')} with ${expectOpts}`;
+    it(msg, () => {
       nodecat = sinon.mock()
         .once()
         .withArgs(
@@ -46,22 +46,22 @@ describe('nodecat command', function() {
           expectOpts,
           match.func
         );
-      var allArgs = RUNTIME_ARGS.concat(args);
+      const allArgs = RUNTIME_ARGS.concat(args);
       nodecatCmd(allArgs, sinon.mock().never());
       nodecat.verify();
     });
   }
 
   function expectArgsErr(args, expectErrMsg) {
-    it('prints error and exits for ' + args.join(' '), function(done) {
-      var outStream = new stream.PassThrough();
-      var errStream = new stream.PassThrough();
-      var options = {
-        outStream: outStream,
-        errStream: errStream
+    it(`prints error and exits for ${args.join(' ')}`, (done) => {
+      const outStream = new stream.PassThrough();
+      const errStream = new stream.PassThrough();
+      const options = {
+        outStream,
+        errStream
       };
-      var allArgs = RUNTIME_ARGS.concat(args);
-      nodecatCmd(allArgs, options, function(err, code) {
+      const allArgs = RUNTIME_ARGS.concat(args);
+      nodecatCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.isAtLeast(code, 1);
         assert.strictEqual(outStream.read(), null);
@@ -72,7 +72,7 @@ describe('nodecat command', function() {
   }
 
   // Check individual arguments are handled correctly
-  var matchDefaultOpts = match({
+  const matchDefaultOpts = match({
     fileStreams: match({
       '-': match.object
     })
@@ -99,13 +99,13 @@ describe('nodecat command', function() {
 
   // Check argument errors are handled correctly
   function matchBadOpt(opt) {
-    var reexp = '(known|legal|recognized|supported)\\b.+' + opt;
+    const reexp = `(known|legal|recognized|supported)\\b.+${opt}`;
     return new RegExp(reexp, 'i');
   }
   expectArgsErr(['-a'], matchBadOpt('-a'));
   expectArgsErr(['--unknown'], matchBadOpt('--unknown'));
 
-  it('yields 0 for non-Error nodecat result', function(done) {
+  it('yields 0 for non-Error nodecat result', (done) => {
     nodecat = sinon.mock()
       .once()
       .withArgs(
@@ -114,15 +114,15 @@ describe('nodecat command', function() {
         match.func
       )
       .yields(null);
-    nodecatCmd([], {}, function(err, code) {
+    nodecatCmd([], {}, (err, code) => {
       assert.ifError(err);
       assert.strictEqual(code, 0);
       done();
     });
   });
 
-  it('yields non-0 for Error nodecat result', function(done) {
-    var errTest = new Error('test error');
+  it('yields non-0 for Error nodecat result', (done) => {
+    const errTest = new Error('test error');
     nodecat = sinon.mock()
       .once()
       .withArgs(
@@ -131,7 +131,7 @@ describe('nodecat command', function() {
         match.func
       )
       .yields(errTest);
-    nodecatCmd([], {}, function(err, code) {
+    nodecatCmd([], {}, (err, code) => {
       // Note:  Error is not propagated, since it is fully handled by nodecat
       assert.ifError(err);
       assert.isAtLeast(code, 1);
@@ -139,47 +139,47 @@ describe('nodecat command', function() {
     });
   });
 
-  it('throws TypeError for non-function callback', function() {
+  it('throws TypeError for non-function callback', () => {
     assert.throws(
-      function() { nodecatCmd(RUNTIME_ARGS, {}, true); },
+      () => { nodecatCmd(RUNTIME_ARGS, {}, true); },
       TypeError,
       /\bcallback\b/
     );
   });
 
-  it('yields TypeError for non-object options', function(done) {
-    nodecatCmd([], true, function(err) {
+  it('yields TypeError for non-object options', (done) => {
+    nodecatCmd([], true, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions\b/);
       done();
     });
   });
 
-  it('yields TypeError for non-Readable in', function(done) {
-    nodecatCmd([], {inStream: {}}, function(err) {
+  it('yields TypeError for non-Readable in', (done) => {
+    nodecatCmd([], {inStream: {}}, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.inStream\b/);
       done();
     });
   });
 
-  it('yields TypeError for non-Writable outStream', function(done) {
-    nodecatCmd([], {outStream: new stream.Readable()}, function(err) {
+  it('yields TypeError for non-Writable outStream', (done) => {
+    nodecatCmd([], {outStream: new stream.Readable()}, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.outStream\b/);
       done();
     });
   });
 
-  it('yields TypeError for non-Writable errStream', function(done) {
-    nodecatCmd([], {errStream: new stream.Readable()}, function(err) {
+  it('yields TypeError for non-Writable errStream', (done) => {
+    nodecatCmd([], {errStream: new stream.Readable()}, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.errStream\b/);
       done();
     });
   });
 
-  it('returns undefined when called with a function', function() {
+  it('returns undefined when called with a function', () => {
     nodecat = sinon.mock()
       .once()
       .withArgs(
@@ -187,15 +187,15 @@ describe('nodecat command', function() {
         match.object,
         match.func
       );
-    var result = nodecatCmd(RUNTIME_ARGS, sinon.mock().never());
+    const result = nodecatCmd(RUNTIME_ARGS, sinon.mock().never());
     nodecat.verify();
     assert.strictEqual(result, undefined);
   });
 
-  describe('without global.Promise', function() {
-    var hadPromise, oldPromise;
+  describe('without global.Promise', () => {
+    let hadPromise, oldPromise;
 
-    before('remove global Promise', function() {
+    before('remove global Promise', () => {
       if (global.Promise) {
         hadPromise = hasOwnProperty.call(global, 'Promise');
         oldPromise = global.Promise;
@@ -205,7 +205,7 @@ describe('nodecat command', function() {
       }
     });
 
-    after('restore global Promise', function() {
+    after('restore global Promise', () => {
       if (oldPromise) {
         if (hadPromise) {
           global.Promise = oldPromise;
@@ -215,19 +215,19 @@ describe('nodecat command', function() {
       }
     });
 
-    it('throws without a callback', function() {
+    it('throws without a callback', () => {
       assert.throws(
-        function() { nodecatCmd(RUNTIME_ARGS); },
+        () => { nodecatCmd(RUNTIME_ARGS); },
         TypeError,
         /\bcallback\b/
       );
     });
   });
 
-  describe('with global.Promise', function() {
-    var hadPromise, oldPromise;
+  describe('with global.Promise', () => {
+    let hadPromise, oldPromise;
 
-    before('ensure global Promise', function() {
+    before('ensure global Promise', () => {
       if (typeof global.Promise !== 'function') {
         hadPromise = hasOwnProperty.call(global, 'Promise');
         oldPromise = global.Promise;
@@ -235,7 +235,7 @@ describe('nodecat command', function() {
       }
     });
 
-    after('restore global Promise', function() {
+    after('restore global Promise', () => {
       if (hadPromise === true) {
         global.Promise = oldPromise;
       } else if (hadPromise === false) {
@@ -243,31 +243,31 @@ describe('nodecat command', function() {
       }
     });
 
-    it('returns a Promise when called without a function', function() {
+    it('returns a Promise when called without a function', () => {
       nodecat = sinon.stub();
-      var result = nodecatCmd(RUNTIME_ARGS);
+      const result = nodecatCmd(RUNTIME_ARGS);
       assert(result instanceof global.Promise);
     });
 
-    it('returned Promise is resolved with exit code', function() {
+    it('returned Promise is resolved with exit code', () => {
       nodecat = sinon.stub();
-      var options = {
+      const options = {
         outStream: new stream.PassThrough(),
         errStream: new stream.PassThrough()
       };
-      var result = nodecatCmd(RUNTIME_ARGS, options);
+      const result = nodecatCmd(RUNTIME_ARGS, options);
       nodecat.yield(null);
-      return result.then(function(code) {
+      return result.then((code) => {
         assert.strictEqual(code, 0);
       });
     });
 
-    it('returned Promise is rejected with Error', function() {
+    it('returned Promise is rejected with Error', () => {
       nodecat = sinon.stub();
-      var result = nodecatCmd(RUNTIME_ARGS, true);
+      const result = nodecatCmd(RUNTIME_ARGS, true);
       return result.then(
         sinon.mock().never(),
-        function(err) { assert.instanceOf(err, TypeError); }
+        (err) => { assert.instanceOf(err, TypeError); }
       );
     });
   });

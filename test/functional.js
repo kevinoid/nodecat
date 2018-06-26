@@ -7,31 +7,31 @@
 
 // Use safe-buffer as Buffer until support for Node < 4 is dropped
 // eslint-disable-next-line no-shadow
-var Buffer = require('safe-buffer').Buffer;
-var assert = require('assert');
-var execFile = require('child_process').execFile;
-var fs = require('fs');
-var path = require('path');
+const Buffer = require('safe-buffer').Buffer;
+const assert = require('assert');
+const execFile = require('child_process').execFile;
+const fs = require('fs');
+const path = require('path');
 
-var deepEqual = assert.deepStrictEqual || assert.deepEqual;
-var binPath = path.join(__dirname, '..', 'bin', 'nodecat.js');
-var testFiles = [
+const deepEqual = assert.deepStrictEqual || assert.deepEqual;
+const binPath = path.join(__dirname, '..', 'bin', 'nodecat.js');
+const testFiles = [
   path.join(__dirname, '..', 'doc-src', 'spec', 'footer.xhtml'),
   path.join(__dirname, '..', 'doc-src', 'spec', 'header.xhtml')
 ];
-var testFileContent = testFiles.reduce(function(contents, file) {
+const testFileContent = testFiles.reduce((contents, file) => {
   contents[file] = fs.readFileSync(file);
   return contents;
 }, {});
 
-describe('nodecat', function() {
-  it('concatenates files around stdin', function(done) {
-    var testContent = Buffer.allocUnsafe(256);
-    for (var i = 0; i < 256; i += 1) {
+describe('nodecat', () => {
+  it('concatenates files around stdin', (done) => {
+    const testContent = Buffer.allocUnsafe(256);
+    for (let i = 0; i < 256; i += 1) {
       testContent[i] = i;
     }
 
-    var proc = execFile(
+    const proc = execFile(
       process.execPath,
       [
         binPath,
@@ -40,9 +40,9 @@ describe('nodecat', function() {
         testFiles[1]
       ],
       {encoding: null},
-      function(err, stdout, stderr) {
+      (err, stdout, stderr) => {
         assert.ifError(err);
-        var expected = Buffer.concat([
+        const expected = Buffer.concat([
           testFileContent[testFiles[0]],
           testContent,
           testFileContent[testFiles[1]]
@@ -61,14 +61,14 @@ describe('nodecat', function() {
     proc.stdin.end(testContent);
   });
 
-  it('exits code 1 with error message for non-existent file', function(done) {
-    var testContent = Buffer.allocUnsafe(256);
-    for (var i = 0; i < 256; i += 1) {
+  it('exits code 1 with error message for non-existent file', (done) => {
+    const testContent = Buffer.allocUnsafe(256);
+    for (let i = 0; i < 256; i += 1) {
       testContent[i] = i;
     }
 
-    var badFilename = 'nonexistent.txt';
-    var proc = execFile(
+    const badFilename = 'nonexistent.txt';
+    const proc = execFile(
       process.execPath,
       [
         binPath,
@@ -78,11 +78,11 @@ describe('nodecat', function() {
         testFiles[1]
       ],
       {encoding: null},
-      function(err, stdout, stderr) {
+      (err, stdout, stderr) => {
         assert.strictEqual(err.code, 1);
 
         // stdout has data that can be read
-        var expected = Buffer.concat([
+        const expected = Buffer.concat([
           testFileContent[testFiles[0]],
           testContent,
           testFileContent[testFiles[1]]
@@ -95,10 +95,10 @@ describe('nodecat', function() {
         }
 
         // stderr contains an error message with the problematic file
-        var stderrStr = String(stderr);
+        const stderrStr = String(stderr);
         assert(
           stderrStr.indexOf(badFilename) >= 0,
-          '"' + stderrStr + '" should contain "' + badFilename + '"'
+          `"${stderrStr}" should contain "${badFilename}"`
         );
         done();
       }

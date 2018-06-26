@@ -8,17 +8,18 @@
 
 'use strict';
 
-var assert = require('assert');
-var nodecat = require('..');
+const assert = require('assert');
+
+const nodecat = require('..');
 
 function usage() {
   return 'usage: nodecat [-u] [file...]\n';
 }
 
 function parseArgs(args) {
-  var dashdash = false;
+  let dashdash = false;
 
-  return args.slice(2).filter(function(arg) {
+  return args.slice(2).filter((arg) => {
     if (dashdash || arg === '-' || arg[0] !== '-') {
       // Non-option argument
       return true;
@@ -36,7 +37,7 @@ function parseArgs(args) {
       return false;
     }
 
-    throw new Error('illegal option -- ' + arg);
+    throw new Error(`illegal option -- ${arg}`);
   });
 }
 
@@ -77,11 +78,11 @@ function nodecatCmd(args, options, callback) {
 
   if (!callback && typeof Promise === 'function') {
     // eslint-disable-next-line no-undef
-    return new Promise(function(resolve, reject) {
-      nodecatCmd(args, options, function(err, result) {
+    return new Promise(((resolve, reject) => {
+      nodecatCmd(args, options, (err, result) => {
         if (err) { reject(err); } else { resolve(result); }
       });
-    });
+    }));
   }
 
   if (typeof callback !== 'function') {
@@ -109,18 +110,18 @@ function nodecatCmd(args, options, callback) {
       throw new TypeError('options.errStream must be a stream.Writable');
     }
   } catch (err) {
-    process.nextTick(function() {
+    process.nextTick(() => {
       callback(err);
     });
     return undefined;
   }
 
-  var fileNames;
+  let fileNames;
   try {
     fileNames = parseArgs(args);
   } catch (errArgs) {
-    options.errStream.write('nodecat: ' + errArgs.message + '\n' + usage());
-    process.nextTick(function() { callback(null, 1); });
+    options.errStream.write(`nodecat: ${errArgs.message}\n${usage()}`);
+    process.nextTick(() => { callback(null, 1); });
     return undefined;
   }
 
@@ -129,14 +130,14 @@ function nodecatCmd(args, options, callback) {
     fileNames = ['-'];
   }
 
-  var catOptions = {
+  const catOptions = {
     errStream: options.errStream,
     fileStreams: {
       '-': options.inStream
     },
     outStream: options.outStream
   };
-  nodecat(fileNames, catOptions, function(err) {
+  nodecat(fileNames, catOptions, (err) => {
     // Note:  Error message, if any, was printed when it occurred
     callback(null, err ? 1 : 0);
   });
@@ -148,12 +149,12 @@ module.exports = nodecatCmd;
 if (require.main === module) {
   // This file was invoked directly.
   /* eslint-disable no-process-exit */
-  var mainOptions = {
+  const mainOptions = {
     inStream: process.stdin,
     outStream: process.stdout,
     errStream: process.stderr
   };
-  nodecatCmd(process.argv, mainOptions, function(err, code) {
+  nodecatCmd(process.argv, mainOptions, (err, code) => {
     assert.ifError(err);
     process.exit(code);
   });

@@ -5,8 +5,9 @@
 
 'use strict';
 
-var AggregateError = require('./lib/aggregate-error');
-var fs = require('fs');
+const fs = require('fs');
+
+const AggregateError = require('./lib/aggregate-error');
 
 /** Combines one or more errors into a single error.
  *
@@ -22,7 +23,7 @@ function combineErrors(errPrev, errNew) {
     return errNew;
   }
 
-  var errCombined;
+  let errCombined;
   if (errPrev instanceof AggregateError) {
     errCombined = errPrev;
   } else {
@@ -74,7 +75,7 @@ function nodecat(fileNames, options, callback) {
 
   if (!callback) {
     return new Promise((resolve, reject) => {
-      nodecat(fileNames, options, function(err, result) {
+      nodecat(fileNames, options, (err, result) => {
         if (err) { reject(err); } else { resolve(result); }
       });
     });
@@ -84,15 +85,15 @@ function nodecat(fileNames, options, callback) {
     throw new TypeError('callback must be a function');
   }
 
-  var callerStreamEnded = {};
-  var callerStreams = (options && options.fileStreams) || {};
-  var errStream = (options && options.errStream) || process.stderr;
-  var outStream = (options && options.outStream) || process.stdout;
+  const callerStreamEnded = {};
+  const callerStreams = (options && options.fileStreams) || {};
+  const errStream = (options && options.errStream) || process.stderr;
+  const outStream = (options && options.outStream) || process.stdout;
 
   try {
-    if (!fileNames ||
-        typeof fileNames !== 'object' ||
-        fileNames.length !== Math.floor(fileNames.length)) {
+    if (!fileNames
+        || typeof fileNames !== 'object'
+        || fileNames.length !== Math.floor(fileNames.length)) {
       throw new TypeError('fileNames must be an Array-like object');
     }
     if (options && typeof options !== 'object') {
@@ -115,9 +116,9 @@ function nodecat(fileNames, options, callback) {
   }
 
   // Error which will be returned from nodecat
-  var errNodecat = null;
+  let errNodecat = null;
   // Cleanup function for the currently piping input stream
-  var inCleanup;
+  let inCleanup;
 
   function allDone() {
     outStream.removeListener('error', onOutError);
@@ -127,7 +128,7 @@ function nodecat(fileNames, options, callback) {
   // Note:  src.unpipe is called by stream.Readable internals on dest 'error'
   function onOutError(err) {
     errNodecat = combineErrors(errNodecat, err);
-    errStream.write('nodecat: ' + err + '\n');
+    errStream.write(`nodecat: ${err}\n`);
     if (inCleanup) {
       inCleanup();
     }
@@ -135,22 +136,22 @@ function nodecat(fileNames, options, callback) {
   }
   outStream.once('error', onOutError);
 
-  var i = 0;
+  let i = 0;
   function catNext() {
     if (i >= fileNames.length) {
       allDone();
       return;
     }
 
-    var fileName = fileNames[i];
+    const fileName = fileNames[i];
     i += 1;
-    var callerStream = callerStreams[fileName];
+    const callerStream = callerStreams[fileName];
     if (callerStream && callerStreamEnded[fileName]) {
       catNext();
       return;
     }
 
-    var inStream = callerStream || fs.createReadStream(fileName);
+    const inStream = callerStream || fs.createReadStream(fileName);
 
     inCleanup = function cleanup() {
       inStream.removeListener('error', onInError);
@@ -169,7 +170,7 @@ function nodecat(fileNames, options, callback) {
       // Mark error with the name of the file which caused it
       err.fileName = fileName;
       errNodecat = combineErrors(errNodecat, err);
-      errStream.write('nodecat: ' + fileName + ': ' + err.message + '\n');
+      errStream.write(`nodecat: ${fileName}: ${err.message}\n`);
       // There is no way to know whether more data may be emitted.
       // To be safe, unpipe to prevent interleaving data after starting next.
       if (typeof inStream.unpipe === 'function') {
