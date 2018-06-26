@@ -72,9 +72,8 @@ function nodecat(fileNames, options, callback) {
     options = null;
   }
 
-  if (!callback && typeof Promise === 'function') {
-    // eslint-disable-next-line no-undef
-    return new Promise(function(resolve, reject) {
+  if (!callback) {
+    return new Promise((resolve, reject) => {
       nodecat(fileNames, options, function(err, result) {
         if (err) { reject(err); } else { resolve(result); }
       });
@@ -109,7 +108,7 @@ function nodecat(fileNames, options, callback) {
       throw new TypeError('options.errStream must be a stream.Writable');
     }
   } catch (err) {
-    process.nextTick(function() {
+    process.nextTick(() => {
       callback(err);
     });
     return undefined;

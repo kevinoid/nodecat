@@ -9,7 +9,6 @@
 'use strict';
 
 var assert = require('assert');
-var exit = require('exit');
 var nodecat = require('..');
 
 function usage() {
@@ -156,6 +155,6 @@ if (require.main === module) {
   };
   nodecatCmd(process.argv, mainOptions, function(err, code) {
     assert.ifError(err);
-    exit(code);
+    process.exit(code);
   });
 }
