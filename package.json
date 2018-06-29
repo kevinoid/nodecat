@@ -26,7 +26,7 @@
   "scripts": {
     "clean": "rimraf coverage && rimraf doc",
     "doc": "npm run doc-js && npm run doc-spec",
-    "doc-js": "node-version-gte-4 && rimraf doc/api && jsdoc -c jsdoc.conf.json .",
+    "doc-js": "rimraf doc/api && jsdoc -c jsdoc.conf.json .",
     "doc-spec": "rimraf doc/spec && mkdir doc/spec && mocha --reporter doc --recursive test | node ./bin/nodecat.js doc-src/spec/header.xhtml - doc-src/spec/footer.xhtml > doc/spec/index.xhtml",
     "lint": "npm run lint-js && npm run lint-doc",
     "lint-doc": "jsdoc -t templates/silent -c jsdoc-lint.conf.json . && echo JSDoc passed.",
