@@ -5,12 +5,12 @@
 
 'use strict';
 
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const stream = require('stream');
 
-const match = sinon.match;
+const {match} = sinon;
 
 // Simulate arguments passed by the node runtime
 const RUNTIME_ARGS = ['node', 'nodecat'];
@@ -23,8 +23,8 @@ describe('nodecat command', () => {
   const nodecatCmd = proxyquire(
     '../bin/nodecat',
     {
-      '..': function nodecatInjected() {
-        return nodecat.apply(this, arguments);
+      '..': function nodecatInjected(...args) {
+        return nodecat.apply(this, args);
       }
     }
   );

@@ -5,7 +5,7 @@
 
 'use strict';
 
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const fs = require('fs');
 const nodecat = require('..');
 const path = require('path');

@@ -6,7 +6,7 @@
 'use strict';
 
 const assert = require('assert');
-const execFile = require('child_process').execFile;
+const {execFile} = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
