@@ -10,7 +10,6 @@ const {execFile} = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const deepEqual = assert.deepStrictEqual || assert.deepEqual;
 const binPath = path.join(__dirname, '..', 'bin', 'nodecat.js');
 const testFiles = [
   path.join(__dirname, '..', 'doc-src', 'spec', 'footer.xhtml'),
@@ -46,11 +45,11 @@ describe('nodecat', () => {
         ]);
         if (typeof stdout === 'string') {
           // Node 0.10 doesn't support returning Buffer
-          deepEqual(stdout, String(expected));
-          deepEqual(stderr, '');
+          assert.deepStrictEqual(stdout, String(expected));
+          assert.deepStrictEqual(stderr, '');
         } else {
-          deepEqual(stdout, expected);
-          deepEqual(stderr, Buffer.alloc(0));
+          assert.deepStrictEqual(stdout, expected);
+          assert.deepStrictEqual(stderr, Buffer.alloc(0));
         }
         done();
       }
@@ -86,9 +85,9 @@ describe('nodecat', () => {
         ]);
         if (typeof stdout === 'string') {
           // Node 0.10 doesn't support returning Buffer
-          deepEqual(stdout, String(expected));
+          assert.deepStrictEqual(stdout, String(expected));
         } else {
-          deepEqual(stdout, expected);
+          assert.deepStrictEqual(stdout, expected);
         }
 
         // stderr contains an error message with the problematic file
