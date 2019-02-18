@@ -200,10 +200,11 @@ describe('nodecat', () => {
       options.outStream.end(() => {
         assert.deepEqual(options.outStream.read(), null);
         const errText = String(options.errStream.read());
-        const errRE
-          = new RegExp('^nodecat: file1.txt: .*test read error 1.*\\n'
-              + 'nodecat: file2.txt: .*test read error 2.*\\n'
-              + 'nodecat: file3.txt: .*test read error 3.*\\n$');
+        const errRE = new RegExp(
+          '^nodecat: file1.txt: .*test read error 1.*\\n'
+            + 'nodecat: file2.txt: .*test read error 2.*\\n'
+            + 'nodecat: file3.txt: .*test read error 3.*\\n$'
+        );
         assert.match(errText, errRE);
         done();
       });
@@ -243,9 +244,10 @@ describe('nodecat', () => {
       options.outStream.end(() => {
         assert.deepEqual(options.outStream.read(), null);
         const errText = String(options.errStream.read());
-        const errRE
-          = new RegExp('^nodecat: file1.txt: .*test read error.*\\n'
-              + 'nodecat: .*test write error.*\\n$');
+        const errRE = new RegExp(
+          '^nodecat: file1.txt: .*test read error.*\\n'
+          + 'nodecat: .*test write error.*\\n$'
+        );
         assert.match(errText, errRE);
         done();
       });
