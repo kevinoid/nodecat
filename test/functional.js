@@ -6,14 +6,14 @@
 'use strict';
 
 const assert = require('assert');
-const {execFile} = require('child_process');
+const { execFile } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
 const binPath = path.join(__dirname, '..', 'bin', 'nodecat.js');
 const testFiles = [
   path.join(__dirname, '..', 'doc-src', 'spec', 'footer.xhtml'),
-  path.join(__dirname, '..', 'doc-src', 'spec', 'header.xhtml')
+  path.join(__dirname, '..', 'doc-src', 'spec', 'header.xhtml'),
 ];
 const testFileContent = testFiles.reduce((contents, file) => {
   contents[file] = fs.readFileSync(file);
@@ -33,15 +33,15 @@ describe('nodecat', () => {
         binPath,
         testFiles[0],
         '-',
-        testFiles[1]
+        testFiles[1],
       ],
-      {encoding: null},
+      { encoding: null },
       (err, stdout, stderr) => {
         assert.ifError(err);
         const expected = Buffer.concat([
           testFileContent[testFiles[0]],
           testContent,
-          testFileContent[testFiles[1]]
+          testFileContent[testFiles[1]],
         ]);
         if (typeof stdout === 'string') {
           // Node 0.10 doesn't support returning Buffer
@@ -52,7 +52,7 @@ describe('nodecat', () => {
           assert.deepStrictEqual(stderr, Buffer.alloc(0));
         }
         done();
-      }
+      },
     );
     proc.stdin.end(testContent);
   });
@@ -71,9 +71,9 @@ describe('nodecat', () => {
         badFilename,
         testFiles[0],
         '-',
-        testFiles[1]
+        testFiles[1],
       ],
-      {encoding: null},
+      { encoding: null },
       (err, stdout, stderr) => {
         assert.strictEqual(err.code, 1);
 
@@ -81,7 +81,7 @@ describe('nodecat', () => {
         const expected = Buffer.concat([
           testFileContent[testFiles[0]],
           testContent,
-          testFileContent[testFiles[1]]
+          testFileContent[testFiles[1]],
         ]);
         if (typeof stdout === 'string') {
           // Node 0.10 doesn't support returning Buffer
@@ -93,11 +93,11 @@ describe('nodecat', () => {
         // stderr contains an error message with the problematic file
         const stderrStr = String(stderr);
         assert(
-          stderrStr.indexOf(badFilename) >= 0,
-          `"${stderrStr}" should contain "${badFilename}"`
+          stderrStr.includes(badFilename),
+          `"${stderrStr}" should contain "${badFilename}"`,
         );
         done();
-      }
+      },
     );
     proc.stdin.end(testContent);
   });

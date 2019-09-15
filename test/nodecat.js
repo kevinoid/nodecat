@@ -5,7 +5,7 @@
 
 'use strict';
 
-const {assert} = require('chai');
+const { assert } = require('chai');
 const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
@@ -30,7 +30,7 @@ describe('nodecat', () => {
   it('concatenates a named file to outStream', (done) => {
     const options = {
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     nodecat([filePath], options, (err) => {
       assert.ifError(err);
@@ -45,14 +45,14 @@ describe('nodecat', () => {
   it('concatenates two named files to outStream', (done) => {
     const options = {
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     nodecat([filePath, filePath], options, (err) => {
       assert.ifError(err);
       options.outStream.end(() => {
         assert.deepEqual(
           options.outStream.read(),
-          Buffer.concat([fileContent, fileContent])
+          Buffer.concat([fileContent, fileContent]),
         );
         assert.strictEqual(options.errStream.read(), null);
         done();
@@ -65,10 +65,10 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     nodecat(['-'], options, (err) => {
       assert.ifError(err);
@@ -86,10 +86,10 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     nodecat(['-', '-'], options, (err) => {
       assert.ifError(err);
@@ -107,10 +107,10 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     let callCount = 0;
     nodecat(['-', filePath], options, (err) => {
@@ -122,7 +122,7 @@ describe('nodecat', () => {
         assert.deepEqual(options.outStream.read(), fileContent);
         assert.match(
           options.errStream.read(),
-          /^nodecat: -: .*test read error.*\n$/
+          /^nodecat: -: .*test read error.*\n$/,
         );
         done();
       });
@@ -136,10 +136,10 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     let callCount = 0;
     nodecat(['-', filePath, '-'], options, (err) => {
@@ -151,7 +151,7 @@ describe('nodecat', () => {
         assert.deepEqual(options.outStream.read(), fileContent);
         assert.match(
           options.errStream.read(),
-          /^nodecat: -: .*test read error.*\n$/
+          /^nodecat: -: .*test read error.*\n$/,
         );
         done();
       });
@@ -171,10 +171,10 @@ describe('nodecat', () => {
       fileStreams: {
         'file1.txt': stream1,
         'file2.txt': stream2,
-        'file3.txt': stream3
+        'file3.txt': stream3,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     let callCount = 0;
     nodecat(['file1.txt', 'file2.txt', 'file3.txt'], options, (err) => {
@@ -193,7 +193,7 @@ describe('nodecat', () => {
       const errMsgRE = new RegExp(
         '.*test read error 1.*\\n'
           + '.*test read error 2.*\\n'
-          + '.*test read error 3.*\\n.*'
+          + '.*test read error 3.*\\n.*',
       );
       assert.match(String(err), errMsgRE);
 
@@ -203,7 +203,7 @@ describe('nodecat', () => {
         const errRE = new RegExp(
           '^nodecat: file1.txt: .*test read error 1.*\\n'
             + 'nodecat: file2.txt: .*test read error 2.*\\n'
-            + 'nodecat: file3.txt: .*test read error 3.*\\n$'
+            + 'nodecat: file3.txt: .*test read error 3.*\\n$',
         );
         assert.match(errText, errRE);
         done();
@@ -226,10 +226,10 @@ describe('nodecat', () => {
     const options = {
       fileStreams: {
         'file1.txt': stream1,
-        'file2.txt': stream2
+        'file2.txt': stream2,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     let callCount = 0;
     nodecat(['file1.txt', 'file2.txt'], options, (err) => {
@@ -246,7 +246,7 @@ describe('nodecat', () => {
         const errText = String(options.errStream.read());
         const errRE = new RegExp(
           '^nodecat: file1.txt: .*test read error.*\\n'
-          + 'nodecat: .*test write error.*\\n$'
+          + 'nodecat: .*test write error.*\\n$',
         );
         assert.match(errText, errRE);
         done();
@@ -262,13 +262,13 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     options.fileStreams[filePath] = {
-      pipe: sinon.mock().never()
+      pipe: sinon.mock().never(),
     };
     let callCount = 0;
     nodecat(['-', filePath], options, (err) => {
@@ -279,7 +279,7 @@ describe('nodecat', () => {
         assert.strictEqual(options.outStream.read(), null);
         assert.match(
           options.errStream.read(),
-          /^nodecat: .*test write error.*\n/
+          /^nodecat: .*test write error.*\n/,
         );
         done();
       });
@@ -295,13 +295,13 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     options.fileStreams[filePath] = {
-      pipe: sinon.mock().never()
+      pipe: sinon.mock().never(),
     };
     // Assert would throw without this test listener.
     inStream.on('error', function() {
@@ -317,7 +317,7 @@ describe('nodecat', () => {
         assert.strictEqual(options.outStream.read(), null);
         assert.match(
           options.errStream.read(),
-          /^nodecat: .*test write error.*\n/
+          /^nodecat: .*test write error.*\n/,
         );
         done();
       });
@@ -333,10 +333,10 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     // Assert would throw without this test listener.
     options.outStream.on('error', function() {
@@ -361,7 +361,7 @@ describe('nodecat', () => {
     assert.throws(
       () => { nodecat([], {}, true); },
       TypeError,
-      /\bcallback\b/
+      /\bcallback\b/,
     );
   });
 
@@ -382,7 +382,7 @@ describe('nodecat', () => {
   });
 
   it('yields TypeError for non-object options.fileStreams', (done) => {
-    nodecat([], {fileStreams: true}, (err) => {
+    nodecat([], { fileStreams: true }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.fileStreams\b/);
       done();
@@ -390,7 +390,7 @@ describe('nodecat', () => {
   });
 
   it('yields TypeError for non-Writable outStream', (done) => {
-    nodecat([], {outStream: new stream.Readable()}, (err) => {
+    nodecat([], { outStream: new stream.Readable() }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.outStream\b/);
       done();
@@ -398,7 +398,7 @@ describe('nodecat', () => {
   });
 
   it('yields TypeError for non-Writable errStream', (done) => {
-    nodecat([], {errStream: new stream.Readable()}, (err) => {
+    nodecat([], { errStream: new stream.Readable() }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.errStream\b/);
       done();
@@ -420,10 +420,10 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     setImmediate(() => {
       ended = true;
@@ -438,7 +438,7 @@ describe('nodecat', () => {
     const result = nodecat([], true);
     return result.then(
       sinon.mock().never(),
-      (err) => { assert.instanceOf(err, TypeError); }
+      (err) => { assert.instanceOf(err, TypeError); },
     );
   });
 
@@ -447,17 +447,17 @@ describe('nodecat', () => {
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
-        '-': inStream
+        '-': inStream,
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     setImmediate(() => {
       inStream.emit('error', errTest);
     });
     return nodecat(['-'], options).then(
       sinon.mock().never(),
-      (err) => { assert.strictEqual(err, errTest); }
+      (err) => { assert.strictEqual(err, errTest); },
     );
   });
 
@@ -465,17 +465,17 @@ describe('nodecat', () => {
     const errTest = new Error('test error');
     const options = {
       fileStreams: {
-        '-': new stream.PassThrough()
+        '-': new stream.PassThrough(),
       },
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     setImmediate(() => {
       options.outStream.emit('error', errTest);
     });
     return nodecat(['-'], options).then(
       sinon.mock().never(),
-      (err) => { assert.strictEqual(err, errTest); }
+      (err) => { assert.strictEqual(err, errTest); },
     );
   });
 });

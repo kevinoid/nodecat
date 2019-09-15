@@ -5,12 +5,12 @@
 
 'use strict';
 
-const {assert} = require('chai');
+const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const stream = require('stream');
 
-const {match} = sinon;
+const { match } = sinon;
 
 // Simulate arguments passed by the node runtime
 const RUNTIME_ARGS = ['node', 'nodecat'];
@@ -25,8 +25,8 @@ describe('nodecat command', () => {
     {
       '..': function nodecatInjected(...args) {
         return nodecat.apply(this, args);
-      }
-    }
+      },
+    },
   );
 
   // Ensure that expectations are not carried over between tests
@@ -43,7 +43,7 @@ describe('nodecat command', () => {
         .withArgs(
           match(expectFiles),
           expectOpts,
-          match.func
+          match.func,
         );
       const allArgs = RUNTIME_ARGS.concat(args);
       nodecatCmd(allArgs, sinon.mock().never());
@@ -57,7 +57,7 @@ describe('nodecat command', () => {
       const errStream = new stream.PassThrough();
       const options = {
         outStream,
-        errStream
+        errStream,
       };
       const allArgs = RUNTIME_ARGS.concat(args);
       nodecatCmd(allArgs, options, (err, code) => {
@@ -73,8 +73,8 @@ describe('nodecat command', () => {
   // Check individual arguments are handled correctly
   const matchDefaultOpts = match({
     fileStreams: match({
-      '-': match.object
-    })
+      '-': match.object,
+    }),
   });
   expectArgsAs([], ['-'], matchDefaultOpts);
   expectArgsAs(['-'], ['-'], matchDefaultOpts);
@@ -110,7 +110,7 @@ describe('nodecat command', () => {
       .withArgs(
         match(['-']),
         match.object,
-        match.func
+        match.func,
       )
       .yields(null);
     nodecatCmd([], {}, (err, code) => {
@@ -127,7 +127,7 @@ describe('nodecat command', () => {
       .withArgs(
         match(['-']),
         match.object,
-        match.func
+        match.func,
       )
       .yields(errTest);
     nodecatCmd([], {}, (err, code) => {
@@ -142,7 +142,7 @@ describe('nodecat command', () => {
     assert.throws(
       () => { nodecatCmd(RUNTIME_ARGS, {}, true); },
       TypeError,
-      /\bcallback\b/
+      /\bcallback\b/,
     );
   });
 
@@ -155,7 +155,7 @@ describe('nodecat command', () => {
   });
 
   it('yields TypeError for non-Readable in', (done) => {
-    nodecatCmd([], {inStream: {}}, (err) => {
+    nodecatCmd([], { inStream: {} }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.inStream\b/);
       done();
@@ -163,7 +163,7 @@ describe('nodecat command', () => {
   });
 
   it('yields TypeError for non-Writable outStream', (done) => {
-    nodecatCmd([], {outStream: new stream.Readable()}, (err) => {
+    nodecatCmd([], { outStream: new stream.Readable() }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.outStream\b/);
       done();
@@ -171,7 +171,7 @@ describe('nodecat command', () => {
   });
 
   it('yields TypeError for non-Writable errStream', (done) => {
-    nodecatCmd([], {errStream: new stream.Readable()}, (err) => {
+    nodecatCmd([], { errStream: new stream.Readable() }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.errStream\b/);
       done();
@@ -184,7 +184,7 @@ describe('nodecat command', () => {
       .withArgs(
         match(['-']),
         match.object,
-        match.func
+        match.func,
       );
     const result = nodecatCmd(RUNTIME_ARGS, sinon.mock().never());
     nodecat.verify();
@@ -201,7 +201,7 @@ describe('nodecat command', () => {
     nodecat = sinon.stub();
     const options = {
       outStream: new stream.PassThrough(),
-      errStream: new stream.PassThrough()
+      errStream: new stream.PassThrough(),
     };
     const result = nodecatCmd(RUNTIME_ARGS, options);
     nodecat.yield(null);
@@ -215,7 +215,7 @@ describe('nodecat command', () => {
     const result = nodecatCmd(RUNTIME_ARGS, true);
     return result.then(
       sinon.mock().never(),
-      (err) => { assert.instanceOf(err, TypeError); }
+      (err) => { assert.instanceOf(err, TypeError); },
     );
   });
 });

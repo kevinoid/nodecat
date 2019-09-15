@@ -77,11 +77,11 @@ function nodecatCmd(args, options, callback) {
   }
 
   if (!callback && typeof Promise === 'function') {
-    return new Promise(((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       nodecatCmd(args, options, (err, result) => {
         if (err) { reject(err); } else { resolve(result); }
       });
-    }));
+    });
   }
 
   if (typeof callback !== 'function') {
@@ -96,7 +96,7 @@ function nodecatCmd(args, options, callback) {
     options = {
       inStream: (options && options.inStream) || process.stdin,
       outStream: (options && options.outStream) || process.stdout,
-      errStream: (options && options.errStream) || process.stderr
+      errStream: (options && options.errStream) || process.stderr,
     };
 
     if (!options.inStream || typeof options.inStream.pipe !== 'function') {
@@ -132,9 +132,9 @@ function nodecatCmd(args, options, callback) {
   const catOptions = {
     errStream: options.errStream,
     fileStreams: {
-      '-': options.inStream
+      '-': options.inStream,
     },
-    outStream: options.outStream
+    outStream: options.outStream,
   };
   nodecat(fileNames, catOptions, (err) => {
     // Note:  Error message, if any, was printed when it occurred
@@ -151,7 +151,7 @@ if (require.main === module) {
   const mainOptions = {
     inStream: process.stdin,
     outStream: process.stdout,
-    errStream: process.stderr
+    errStream: process.stderr,
   };
   nodecatCmd(process.argv, mainOptions, (err, code) => {
     assert.ifError(err);

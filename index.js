@@ -181,7 +181,7 @@ function nodecat(fileNames, options, callback) {
     inStream.once('error', onInError);
     inStream.once('end', done);
 
-    inStream.pipe(outStream, {end: false});
+    inStream.pipe(outStream, { end: false });
   }
 
   catNext();
