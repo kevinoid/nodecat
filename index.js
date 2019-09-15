@@ -121,6 +121,7 @@ function nodecat(fileNames, options, callback) {
   let inCleanup;
 
   function allDone() {
+    // eslint-disable-next-line no-use-before-define
     outStream.removeListener('error', onOutError);
     callback(errNodecat);
   }
