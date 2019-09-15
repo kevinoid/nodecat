@@ -1,0 +1,16 @@
+// ESLint configuration <https://eslint.org/docs/user-guide/configuring>
+{
+  "extends": "@kevinoid/eslint-config/node.js",
+
+  "rules": {
+    // Allow requiring devDependencies for build and test
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": [
+        "gulpfile.js",
+        "test-bin/**",
+        "test-lib/**",
+        "test/**"
+      ]
+    }]
+  }
+}
