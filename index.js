@@ -154,11 +154,6 @@ function nodecat(fileNames, options, callback) {
 
     const inStream = callerStream || fs.createReadStream(fileName);
 
-    inCleanup = function cleanup() {
-      inStream.removeListener('error', onInError);
-      inStream.removeListener('end', done);
-    };
-
     function done() {
       if (callerStream) {
         callerStreamEnded[fileName] = true;
@@ -166,6 +161,7 @@ function nodecat(fileNames, options, callback) {
       inCleanup();
       catNext();
     }
+    inStream.once('end', done);
 
     function onInError(err) {
       // Mark error with the name of the file which caused it
@@ -180,7 +176,11 @@ function nodecat(fileNames, options, callback) {
       done();
     }
     inStream.once('error', onInError);
-    inStream.once('end', done);
+
+    inCleanup = function cleanup() {
+      inStream.removeListener('error', onInError);
+      inStream.removeListener('end', done);
+    };
 
     inStream.pipe(outStream, { end: false });
   }
