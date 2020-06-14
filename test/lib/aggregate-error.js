@@ -33,7 +33,7 @@ describe('AggregateError', () => {
 
   it('can be instantiated without new', () => {
     const testMsg = 'test message';
-    const a = AggregateError(testMsg);
+    const a = AggregateError(testMsg);  // eslint-disable-line new-cap
     assert(a instanceof AggregateError);
     assert.strictEqual(a.message, testMsg);
   });

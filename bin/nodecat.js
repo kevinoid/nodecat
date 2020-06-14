@@ -74,7 +74,7 @@ function parseArgs(args) {
 function nodecatCmd(args, options, callback) {
   if (!callback && typeof options === 'function') {
     callback = options;
-    options = null;
+    options = undefined;
   }
 
   if (!callback && typeof Promise === 'function') {
@@ -121,6 +121,8 @@ function nodecatCmd(args, options, callback) {
     fileNames = parseArgs(args);
   } catch (errArgs) {
     options.errStream.write(`nodecat: ${errArgs.message}\n${usage()}`);
+    // Use null to preserve existing behavior
+    // eslint-disable-next-line unicorn/no-null
     process.nextTick(() => { callback(null, 1); });
     return undefined;
   }
@@ -139,6 +141,8 @@ function nodecatCmd(args, options, callback) {
   };
   nodecat(fileNames, catOptions, (err) => {
     // Note:  Error message, if any, was printed when it occurred
+    // Use null to preserve existing behavior
+    // eslint-disable-next-line unicorn/no-null
     callback(null, err ? 1 : 0);
   });
   return undefined;

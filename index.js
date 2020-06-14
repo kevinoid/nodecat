@@ -116,6 +116,8 @@ function nodecat(fileNames, options, callback) {
   }
 
   // Error which will be returned from nodecat
+  // Use null to preserve existing behavior
+  // eslint-disable-next-line unicorn/no-null
   let errNodecat = null;
   // Cleanup function for the currently piping input stream
   let inCleanup;
