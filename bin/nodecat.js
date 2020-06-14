@@ -44,29 +44,30 @@ function parseArgs(args) {
 /** Options for command entry points.
  *
  * @typedef {{
- *   inStream: (stream.Readable|undefined),
- *   outStream: (stream.Writable|undefined),
- *   errStream: (stream.Writable|undefined)
+ *   inStream: (module:stream.Readable|undefined),
+ *   outStream: (module:stream.Writable|undefined),
+ *   errStream: (module:stream.Writable|undefined)
  * }} CommandOptions
- * @property {stream.Readable=} inStream Stream from which the file named '-'
- * (also the default if no file names are given) is read.
+ * @property {module:stream.Readable=} inStream Stream from which the file
+ * named '-' (also the default if no file names are given) is read.
  * (default: <code>process.stdin</code>)
- * @property {stream.Writable=} outStream Stream to which output is written.
- * (default: <code>process.stdout</code>)
- * @property {stream.Writable=} errStream Stream to which errors (and
+ * @property {module:stream.Writable=} outStream Stream to which output is
+ * written.  (default: <code>process.stdout</code>)
+ * @property {module:stream.Writable=} errStream Stream to which errors (and
  * non-output status messages) are written.
  * (default: <code>process.stderr</code>)
  */
 // var CommandOptions;
 
-/** Entry point for this command.
+/**
+ * Entry point for this command.
  *
  * @param {!Array<string>} args Command-line arguments.
  * @param {CommandOptions=} options Options.
- * @param {?function(Error, number=)=}
- * callback Callback for the exit code or an <code>Error</code>.  Required if
- * <code>global.Promise</code> is not defined.
- * @return {Promise<number>|undefined} If <code>callback</code> is not given
+ * @param {?function(Error, number=)=} callback Callback for the exit code or
+ * an <code>Error</code>.  Required if <code>global.Promise</code> is not
+ * defined.
+ * @returns {Promise<number>|undefined} If <code>callback</code> is not given
  * and <code>global.Promise</code> is defined, a <code>Promise</code> with the
  * exit code or <code>Error</code>.
  */

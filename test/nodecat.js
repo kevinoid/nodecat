@@ -17,7 +17,11 @@ const AggregateError = require('../lib/aggregate-error');
 const filePath = path.resolve(__dirname, '..', 'package.json');
 const fileContent = fs.readFileSync(filePath);
 
-/** Gets the number of listeners for a named event on an emitter. */
+/**
+ * Gets the number of listeners for a named event on an emitter.
+ *
+ * @private
+ */
 function listenerCount(emitter, eventName) {
   if (typeof emitter.listenerCount === 'function') {
     return emitter.listenerCount(eventName);

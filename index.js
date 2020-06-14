@@ -13,7 +13,7 @@ const AggregateError = require('./lib/aggregate-error');
  *
  * @param {AggregateError|Error} errPrev Previous errors, if any.
  * @param {!Error} errNew New error.
- * @return {!AggregateError|!Error} Error which represents all errors that have
+ * @returns {!AggregateError|!Error} Error which represents all errors that have
  * occurred.  If only one error has occurred, it will be returned.  Otherwise
  * an {@link AggregateError} including all previous errors will be returned.
  * @private
@@ -38,16 +38,16 @@ function combineErrors(errPrev, errNew) {
 /** Options for {@link nodecat}.
  *
  * @typedef {{
- *   fileStreams: (Object<string,!stream.Readable>|undefined),
- *   outStream: (stream.Writable|undefined),
- *   errStream: (stream.Writable|undefined)
- * }} CommandOptions
- * @property {Object<string,!stream.Readable>=} fileStreams Mapping from file
- * names to readable streams which will be read for the named file.  If the
- * file appears multiple times, the stream is only read once.
- * @property {stream.Writable=} outStream Stream to which concatenated output
- * is written. (default: <code>process.stdout</code>)
- * @property {stream.Writable=} errStream Stream to which errors (and
+ *   fileStreams: (object<string,!module:stream.Readable>|undefined),
+ *   outStream: (module:stream.Writable|undefined),
+ *   errStream: (module:stream.Writable|undefined)
+ * }} NodecatOptions
+ * @property {object<string,!module:stream.Readable>=} fileStreams Mapping from
+ * file names to readable streams which will be read for the named file.  If
+ * the file appears multiple times, the stream is only read once.
+ * @property {module:stream.Writable=} outStream Stream to which concatenated
+ * output is written. (default: <code>process.stdout</code>)
+ * @property {module:stream.Writable=} errStream Stream to which errors (and
  * non-output status messages) are written.
  * (default: <code>process.stderr</code>)
  */
@@ -63,7 +63,7 @@ function combineErrors(errPrev, errNew) {
  * <code>Error</code> which occurred, if any.  Note that concatenation
  * continues after errors.  Required if <code>global.Promise</code> is not
  * defined.
- * @return {Promise|undefined} If <code>callback</code> is not given and
+ * @returns {Promise|undefined} If <code>callback</code> is not given and
  * <code>global.Promise</code> is defined, a <code>Promise</code> which
  * resolves once all output has been written.
  */
