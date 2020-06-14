@@ -70,7 +70,7 @@ function combineErrors(errPrev, errNew) {
 function nodecat(fileNames, options, callback) {
   if (!callback && typeof options === 'function') {
     callback = options;
-    options = null;
+    options = undefined;
   }
 
   if (!callback) {
