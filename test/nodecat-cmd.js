@@ -97,6 +97,7 @@ describe('nodecat command', () => {
   expectArgsAs(['--', '-a'], ['-a'], matchDefaultOpts);
 
   // Check argument errors are handled correctly
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   function matchBadOpt(opt) {
     const reexp = `(known|legal|recognized|supported)\\b.+${opt}`;
     return new RegExp(reexp, 'i');
