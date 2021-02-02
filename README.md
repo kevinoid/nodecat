@@ -1,8 +1,7 @@
 Nodecat
 ========
 
-[![Build Status: Linux](https://img.shields.io/travis/kevinoid/nodecat/master.svg?style=flat&label=build+on+linux)](https://travis-ci.org/kevinoid/nodecat)
-[![Build Status: Windows](https://img.shields.io/appveyor/ci/kevinoid/nodecat/master.svg?style=flat&label=build+on+windows)](https://ci.appveyor.com/project/kevinoid/nodecat)
+[![Build Status](https://img.shields.io/github/workflow/status/kevinoid/nodecat/Node.js%20CI/master.svg?style=flat&label=build)](https://github.com/kevinoid/nodecat/actions?query=branch%3Amaster)
 [![Coverage](https://img.shields.io/codecov/c/github/kevinoid/nodecat.svg?style=flat)](https://codecov.io/github/kevinoid/nodecat?branch=master)
 [![Dependency Status](https://img.shields.io/david/kevinoid/nodecat.svg?style=flat)](https://david-dm.org/kevinoid/nodecat)
 [![Supported Node Version](https://img.shields.io/node/v/nodecat.svg?style=flat)](https://www.npmjs.com/package/nodecat)
