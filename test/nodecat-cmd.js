@@ -31,6 +31,7 @@ describe('nodecat command', () => {
 
   // Ensure that expectations are not carried over between tests
   beforeEach(() => {
+    // eslint-disable-next-line unicorn/consistent-destructuring
     nodecat = sinon.expectation.create('nodecat').never();
   });
 
@@ -45,7 +46,7 @@ describe('nodecat command', () => {
           expectOpts,
           match.func,
         );
-      const allArgs = RUNTIME_ARGS.concat(args);
+      const allArgs = [...RUNTIME_ARGS, ...args];
       nodecatCmd(allArgs, sinon.mock().never());
       nodecat.verify();
     });
@@ -59,7 +60,7 @@ describe('nodecat command', () => {
         outStream,
         errStream,
       };
-      const allArgs = RUNTIME_ARGS.concat(args);
+      const allArgs = [...RUNTIME_ARGS, ...args];
       nodecatCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.isAtLeast(code, 1);

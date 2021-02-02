@@ -56,6 +56,8 @@ describe('nodecat', () => {
       options.outStream.end(() => {
         assert.deepEqual(
           options.outStream.read(),
+          // https://github.com/sindresorhus/eslint-plugin-unicorn/issues/1068
+          // eslint-disable-next-line unicorn/prefer-spread
           Buffer.concat([fileContent, fileContent]),
         );
         assert.strictEqual(options.errStream.read(), null);

@@ -38,6 +38,8 @@ describe('nodecat', () => {
       { encoding: null },
       (err, stdout, stderr) => {
         assert.ifError(err);
+        // https://github.com/sindresorhus/eslint-plugin-unicorn/issues/1068
+        // eslint-disable-next-line unicorn/prefer-spread
         const expected = Buffer.concat([
           testFileContent[testFiles[0]],
           testContent,
@@ -78,6 +80,8 @@ describe('nodecat', () => {
         assert.strictEqual(err.code, 1);
 
         // stdout has data that can be read
+        // https://github.com/sindresorhus/eslint-plugin-unicorn/issues/1068
+        // eslint-disable-next-line unicorn/prefer-spread
         const expected = Buffer.concat([
           testFileContent[testFiles[0]],
           testContent,
