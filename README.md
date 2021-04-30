@@ -1,8 +1,8 @@
 Nodecat
 ========
 
-[![Build Status](https://img.shields.io/github/workflow/status/kevinoid/nodecat/Node.js%20CI/master.svg?style=flat&label=build)](https://github.com/kevinoid/nodecat/actions?query=branch%3Amaster)
-[![Coverage](https://img.shields.io/codecov/c/github/kevinoid/nodecat.svg?style=flat)](https://codecov.io/github/kevinoid/nodecat?branch=master)
+[![Build Status](https://img.shields.io/github/workflow/status/kevinoid/nodecat/Node.js%20CI/main.svg?style=flat&label=build)](https://github.com/kevinoid/nodecat/actions?query=branch%3Amain)
+[![Coverage](https://img.shields.io/codecov/c/github/kevinoid/nodecat.svg?style=flat)](https://codecov.io/github/kevinoid/nodecat?branch=main)
 [![Dependency Status](https://img.shields.io/david/kevinoid/nodecat.svg?style=flat)](https://david-dm.org/kevinoid/nodecat)
 [![Supported Node Version](https://img.shields.io/node/v/nodecat.svg?style=flat)](https://www.npmjs.com/package/nodecat)
 [![Version on NPM](https://img.shields.io/npm/v/nodecat.svg?style=flat)](https://www.npmjs.com/package/nodecat)

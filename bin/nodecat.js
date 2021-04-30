@@ -4,6 +4,7 @@
  *
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module nodecat/bin/nodecat.js
  */
 
 'use strict';
