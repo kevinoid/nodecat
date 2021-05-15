@@ -7,7 +7,7 @@
 
 const assert = require('assert');
 
-const AggregateError = require('../../lib/aggregate-error');
+const AggregateError = require('../../lib/aggregate-error.js');
 
 describe('AggregateError', () => {
   it('sets .message from argument', () => {

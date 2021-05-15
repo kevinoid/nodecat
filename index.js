@@ -8,7 +8,7 @@
 
 const fs = require('fs');
 
-const AggregateError = require('./lib/aggregate-error');
+const AggregateError = require('./lib/aggregate-error.js');
 
 /** Combines one or more errors into a single error.
  *

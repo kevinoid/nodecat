@@ -12,7 +12,7 @@ const sinon = require('sinon');
 const stream = require('stream');
 
 const nodecat = require('..');
-const AggregateError = require('../lib/aggregate-error');
+const AggregateError = require('../lib/aggregate-error.js');
 
 const filePath = path.resolve(__dirname, '..', 'package.json');
 const fileContent = fs.readFileSync(filePath);
