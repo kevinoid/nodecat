@@ -214,9 +214,9 @@ describe('nodecat', () => {
       });
     });
     stream1.emit('error', errTest1);
-    process.nextTick(() => {
+    queueMicrotask(() => {
       stream2.emit('error', errTest2);
-      process.nextTick(() => {
+      queueMicrotask(() => {
         stream3.emit('error', errTest3);
       });
     });
@@ -279,7 +279,7 @@ describe('nodecat', () => {
       callCount += 1;
       assert.strictEqual(callCount, 1);
       assert.strictEqual(err, errTest);
-      process.nextTick(() => {
+      queueMicrotask(() => {
         assert.strictEqual(options.outStream.read(), null);
         assert.match(
           options.errStream.read(),

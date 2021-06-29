@@ -111,7 +111,7 @@ function nodecatCmd(args, options, callback) {
       throw new TypeError('options.errStream must be a stream.Writable');
     }
   } catch (err) {
-    process.nextTick(() => {
+    queueMicrotask(() => {
       callback(err);
     });
     return undefined;
@@ -124,7 +124,7 @@ function nodecatCmd(args, options, callback) {
     options.errStream.write(`nodecat: ${errArgs.message}\n${usage()}`);
     // Use null to preserve existing behavior
     // eslint-disable-next-line unicorn/no-null
-    process.nextTick(() => { callback(null, 1); });
+    queueMicrotask(() => { callback(null, 1); });
     return undefined;
   }
 
