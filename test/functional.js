@@ -15,10 +15,9 @@ const testFiles = [
   path.join(__dirname, '..', 'doc-src', 'spec', 'footer.xhtml'),
   path.join(__dirname, '..', 'doc-src', 'spec', 'header.xhtml'),
 ];
-const testFileContent = testFiles.reduce((contents, file) => {
-  contents[file] = fs.readFileSync(file);
-  return contents;
-}, {});
+const testFileContent = Object.fromEntries(
+  testFiles.map((testFile) => [testFile, fs.readFileSync(testFile)]),
+);
 
 describe('nodecat', () => {
   it('concatenates files around stdin', (done) => {
