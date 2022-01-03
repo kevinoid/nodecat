@@ -82,8 +82,11 @@ describe('nodecat command', () => {
   expectArgsAs(['file.txt'], ['file.txt'], matchDefaultOpts);
   expectArgsAs(['--', 'file.txt'], ['file.txt'], matchDefaultOpts);
   expectArgsAs(['file.txt', '--'], ['file.txt'], matchDefaultOpts);
-  expectArgsAs(['file.txt', '--', 'file.txt'], ['file.txt', 'file.txt'],
-    matchDefaultOpts);
+  expectArgsAs(
+    ['file.txt', '--', 'file.txt'],
+    ['file.txt', 'file.txt'],
+    matchDefaultOpts,
+  );
   expectArgsAs(['--'], ['-'], matchDefaultOpts);
   expectArgsAs(['--', '-'], ['-'], matchDefaultOpts);
   expectArgsAs(['--', '--'], ['--'], matchDefaultOpts);
