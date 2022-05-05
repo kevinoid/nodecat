@@ -39,11 +39,11 @@ function combineErrors(errPrev, errNew) {
 /** Options for {@link nodecat}.
  *
  * @typedef {{
- *   fileStreams: (object<string,!module:stream.Readable>|undefined),
+ *   fileStreams: (Object<string,!module:stream.Readable>|undefined),
  *   outStream: (module:stream.Writable|undefined),
  *   errStream: (module:stream.Writable|undefined)
  * }} NodecatOptions
- * @property {object<string,!module:stream.Readable>=} fileStreams Mapping from
+ * @property {Object<string,!module:stream.Readable>=} fileStreams Mapping from
  * file names to readable streams which will be read for the named file.  If
  * the file appears multiple times, the stream is only read once.
  * @property {module:stream.Writable=} outStream Stream to which concatenated
