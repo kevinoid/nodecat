@@ -8,34 +8,6 @@
 
 const fs = require('fs');
 
-const AggregateError = require('./lib/aggregate-error.js');
-
-/** Combines one or more errors into a single error.
- *
- * @param {AggregateError|Error} errPrev Previous errors, if any.
- * @param {!Error} errNew New error.
- * @returns {!AggregateError|!Error} Error which represents all errors that have
- * occurred.  If only one error has occurred, it will be returned.  Otherwise
- * an {@link AggregateError} including all previous errors will be returned.
- * @private
- */
-function combineErrors(errPrev, errNew) {
-  if (!errPrev) {
-    return errNew;
-  }
-
-  let errCombined;
-  if (errPrev instanceof AggregateError) {
-    errCombined = errPrev;
-  } else {
-    errCombined = new AggregateError();
-    errCombined.push(errPrev);
-  }
-
-  errCombined.push(errNew);
-  return errCombined;
-}
-
 /** Options for {@link nodecat}.
  *
  * @typedef {{
@@ -116,22 +88,30 @@ function nodecat(fileNames, options, callback) {
     return undefined;
   }
 
-  // Error which will be returned from nodecat
-  // Use null to preserve existing behavior
-  // eslint-disable-next-line unicorn/no-null
-  let errNodecat = null;
+  // Errors encountered during this nodecat invocation
+  const errors = [];
+
   // Cleanup function for the currently piping input stream
   let inCleanup;
 
   function allDone() {
     // eslint-disable-next-line no-use-before-define
     outStream.removeListener('error', onOutError);
-    callback(errNodecat);
+    callback(
+      // Use null for compatibility with previous versions
+      // eslint-disable-next-line unicorn/no-null
+      errors.length === 0 ? null
+        : errors.length === 1 ? errors[0]
+          : new AggregateError(
+            errors,
+            errors.map((err) => err.message).join('\n'),
+          ),
+    );
   }
 
   // Note:  src.unpipe is called by stream.Readable internals on dest 'error'
   function onOutError(err) {
-    errNodecat = combineErrors(errNodecat, err);
+    errors.push(err);
     errStream.write(`nodecat: ${err}\n`);
     if (inCleanup) {
       inCleanup();
@@ -169,7 +149,7 @@ function nodecat(fileNames, options, callback) {
     function onInError(err) {
       // Mark error with the name of the file which caused it
       err.fileName = fileName;
-      errNodecat = combineErrors(errNodecat, err);
+      errors.push(err);
       errStream.write(`nodecat: ${fileName}: ${err.message}\n`);
       // There is no way to know whether more data may be emitted.
       // To be safe, unpipe to prevent interleaving data after starting next.

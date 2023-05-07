@@ -12,7 +12,6 @@ const sinon = require('sinon');
 const stream = require('stream');
 
 const nodecat = require('..');
-const AggregateError = require('../lib/aggregate-error.js');
 
 const filePath = path.resolve(__dirname, '..', 'package.json');
 const fileContent = fs.readFileSync(filePath);
@@ -185,19 +184,20 @@ describe('nodecat', () => {
       callCount += 1;
       assert.strictEqual(callCount, 1);
       assert.instanceOf(err, AggregateError);
-      assert.strictEqual(err.length, 3);
-      assert.strictEqual(err[0], errTest1);
-      assert.strictEqual(err[0].fileName, 'file1.txt');
-      assert.strictEqual(err[1], errTest2);
-      assert.strictEqual(err[1].fileName, 'file2.txt');
-      assert.strictEqual(err[2], errTest3);
-      assert.strictEqual(err[2].fileName, 'file3.txt');
+      const { errors } = err;
+      assert.strictEqual(errors.length, 3);
+      assert.strictEqual(errors[0], errTest1);
+      assert.strictEqual(errors[0].fileName, 'file1.txt');
+      assert.strictEqual(errors[1], errTest2);
+      assert.strictEqual(errors[1].fileName, 'file2.txt');
+      assert.strictEqual(errors[2], errTest3);
+      assert.strictEqual(errors[2].fileName, 'file3.txt');
 
       // Confirm that AggregateError.toString has contained messages
       const errMsgRE = new RegExp(
         '.*test read error 1.*\\n'
           + '.*test read error 2.*\\n'
-          + '.*test read error 3.*\\n.*',
+          + '.*test read error 3.*',
       );
       assert.match(String(err), errMsgRE);
 
@@ -240,11 +240,12 @@ describe('nodecat', () => {
       callCount += 1;
       assert.strictEqual(callCount, 1);
       assert.instanceOf(err, AggregateError);
-      assert.strictEqual(err.length, 2);
-      assert.strictEqual(err[0], errTestRead);
-      assert.strictEqual(err[0].fileName, 'file1.txt');
-      assert.strictEqual(err[1], errTestWrite);
-      assert.strictEqual(err[1].fileName, undefined);
+      const { errors } = err;
+      assert.strictEqual(errors.length, 2);
+      assert.strictEqual(errors[0], errTestRead);
+      assert.strictEqual(errors[0].fileName, 'file1.txt');
+      assert.strictEqual(errors[1], errTestWrite);
+      assert.strictEqual(errors[1].fileName, undefined);
       options.outStream.end(() => {
         assert.deepEqual(options.outStream.read(), null);
         const errText = String(options.errStream.read());
