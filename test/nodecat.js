@@ -11,6 +11,8 @@ const path = require('path');
 const sinon = require('sinon');
 const stream = require('stream');
 
+// https://github.com/import-js/eslint-plugin-import/issues/2844
+// eslint-disable-next-line import/extensions
 const nodecat = require('..');
 
 const filePath = path.resolve(__dirname, '..', 'package.json');
