@@ -9,7 +9,7 @@
 
 'use strict';
 
-const assert = require('assert');
+const assert = require('node:assert');
 
 // https://github.com/import-js/eslint-plugin-import/issues/2844
 // eslint-disable-next-line import/extensions

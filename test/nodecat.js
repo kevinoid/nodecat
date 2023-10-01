@@ -5,11 +5,12 @@
 
 'use strict';
 
+const fs = require('node:fs');
+const path = require('node:path');
+const stream = require('node:stream');
+
 const { assert } = require('chai');
-const fs = require('fs');
-const path = require('path');
 const sinon = require('sinon');
-const stream = require('stream');
 
 // https://github.com/import-js/eslint-plugin-import/issues/2844
 // eslint-disable-next-line import/extensions

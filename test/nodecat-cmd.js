@@ -5,10 +5,11 @@
 
 'use strict';
 
+const stream = require('node:stream');
+
 const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
-const stream = require('stream');
 
 const { match } = sinon;
 

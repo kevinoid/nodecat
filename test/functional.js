@@ -5,10 +5,10 @@
 
 'use strict';
 
-const assert = require('assert');
-const { execFile } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const assert = require('node:assert');
+const { execFile } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const binPath = path.join(__dirname, '..', 'bin', 'nodecat.js');
 const testFiles = [
