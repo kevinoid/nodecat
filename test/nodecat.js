@@ -198,9 +198,9 @@ describe('nodecat', () => {
 
       // Confirm that AggregateError.toString has contained messages
       const errMsgRE = new RegExp(
-        '.*test read error 1.*\\n'
+        '^.*test read error 1.*\\n'
           + '.*test read error 2.*\\n'
-          + '.*test read error 3.*',
+          + '.*test read error 3.*$',
       );
       assert.match(String(err), errMsgRE);
 
