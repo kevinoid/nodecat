@@ -420,7 +420,7 @@ describe('nodecat', () => {
 
   it('returns a Promise when called without a function', () => {
     const result = nodecat([]);
-    assert(result instanceof global.Promise);
+    assert(result instanceof globalThis.Promise);
   });
 
   it('returned Promise is resolved after writing', () => {

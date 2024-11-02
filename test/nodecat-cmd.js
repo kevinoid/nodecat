@@ -200,7 +200,7 @@ describe('nodecat command', () => {
   it('returns a Promise when called without a function', () => {
     nodecat = sinon.stub();
     const result = nodecatCmd(RUNTIME_ARGS);
-    assert(result instanceof global.Promise);
+    assert(result instanceof globalThis.Promise);
   });
 
   it('returned Promise is resolved with exit code', () => {
