@@ -32,7 +32,6 @@ describe('nodecat command', () => {
 
   // Ensure that expectations are not carried over between tests
   beforeEach(() => {
-    // eslint-disable-next-line unicorn/consistent-destructuring
     nodecat = sinon.expectation.create('nodecat').never();
   });
 
