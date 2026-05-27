@@ -58,7 +58,7 @@ describe('nodecat', () => {
       assert.ifError(err);
       options.outStream.end(() => {
         assert.deepEqual(
-          options.outStream.read(),
+          options.outStream.read(options.outStream.readableLength),
           Buffer.concat([fileContent, fileContent]),
         );
         assert.strictEqual(options.errStream.read(), null);
@@ -207,7 +207,8 @@ describe('nodecat', () => {
 
       options.outStream.end(() => {
         assert.deepEqual(options.outStream.read(), null);
-        const errText = String(options.errStream.read());
+        const errText =
+          String(options.errStream.read(options.errStream.readableLength));
         const errRE = new RegExp(
           '^nodecat: file1.txt: .*test read error 1.*\\n'
           + 'nodecat: file2.txt: .*test read error 2.*\\n'
@@ -252,7 +253,8 @@ describe('nodecat', () => {
       assert.strictEqual(errors[1].fileName, undefined);
       options.outStream.end(() => {
         assert.deepEqual(options.outStream.read(), null);
-        const errText = String(options.errStream.read());
+        const errText =
+          String(options.errStream.read(options.errStream.readableLength));
         const errRE = new RegExp(
           '^nodecat: file1.txt: .*test read error.*\\n'
           + 'nodecat: .*test write error.*\\n$',
