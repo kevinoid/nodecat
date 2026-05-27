@@ -17,6 +17,7 @@ const sinon = require('sinon');
 const nodecat = require('..');
 
 const filePath = path.resolve(__dirname, '..', 'package.json');
+// eslint-disable-next-line n/no-sync
 const fileContent = fs.readFileSync(filePath);
 
 /**

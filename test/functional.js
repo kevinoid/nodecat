@@ -16,6 +16,7 @@ const testFiles = [
   path.join(__dirname, '..', 'doc-src', 'spec', 'header.xhtml'),
 ];
 const testFileContent = Object.fromEntries(
+  // eslint-disable-next-line n/no-sync
   testFiles.map((testFile) => [testFile, fs.readFileSync(testFile)]),
 );
 
