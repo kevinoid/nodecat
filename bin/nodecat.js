@@ -163,6 +163,6 @@ if (require.main === module) {
   };
   nodecatCmd(process.argv, mainOptions, (err, code) => {
     assert.ifError(err);
-    process.exit(code);
+    process.exitCode = code;
   });
 }
