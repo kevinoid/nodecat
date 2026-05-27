@@ -65,8 +65,8 @@ function nodecat(fileNames, options, callback) {
 
   try {
     if (!fileNames
-        || typeof fileNames !== 'object'
-        || fileNames.length !== Math.floor(fileNames.length)) {
+      || typeof fileNames !== 'object'
+      || fileNames.length !== Math.floor(fileNames.length)) {
       throw new TypeError('fileNames must be an Array-like object');
     }
     if (options && typeof options !== 'object') {

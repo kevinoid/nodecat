@@ -155,7 +155,7 @@ module.exports = nodecatCmd;
 
 if (require.main === module) {
   // This file was invoked directly.
-  /* eslint-disable no-process-exit */
+
   const mainOptions = {
     inStream: process.stdin,
     outStream: process.stdout,

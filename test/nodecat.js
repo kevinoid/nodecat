@@ -199,8 +199,8 @@ describe('nodecat', () => {
       // Confirm that AggregateError.toString has contained messages
       const errMsgRE = new RegExp(
         '^.*test read error 1.*\\n'
-          + '.*test read error 2.*\\n'
-          + '.*test read error 3.*$',
+        + '.*test read error 2.*\\n'
+        + '.*test read error 3.*$',
       );
       assert.match(String(err), errMsgRE);
 
@@ -209,8 +209,8 @@ describe('nodecat', () => {
         const errText = String(options.errStream.read());
         const errRE = new RegExp(
           '^nodecat: file1.txt: .*test read error 1.*\\n'
-            + 'nodecat: file2.txt: .*test read error 2.*\\n'
-            + 'nodecat: file3.txt: .*test read error 3.*\\n$',
+          + 'nodecat: file2.txt: .*test read error 2.*\\n'
+          + 'nodecat: file3.txt: .*test read error 3.*\\n$',
         );
         assert.match(errText, errRE);
         done();
