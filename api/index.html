@@ -43,16 +43,20 @@
 
 
     <section>
-        <article><h1>Nodecat</h1><p><a href="https://travis-ci.org/kevinoid/nodecat"><img src="https://img.shields.io/travis/kevinoid/nodecat/master.svg?style=flat&amp;label=build+on+linux" alt="Build Status: Linux"></a>
-<a href="https://ci.appveyor.com/project/kevinoid/nodecat"><img src="https://img.shields.io/appveyor/ci/kevinoid/nodecat/master.svg?style=flat&amp;label=build+on+windows" alt="Build Status: Windows"></a>
-<a href="https://codecov.io/github/kevinoid/nodecat?branch=master"><img src="https://img.shields.io/codecov/c/github/kevinoid/nodecat.svg?style=flat" alt="Coverage"></a>
-<a href="https://david-dm.org/kevinoid/nodecat"><img src="https://img.shields.io/david/kevinoid/nodecat.svg?style=flat" alt="Dependency Status"></a>
+        <article><h1>Nodecat</h1>
+<p><a href="https://github.com/kevinoid/nodecat/actions/workflows/node.js.yml?query=branch%3Amain"><img src="https://img.shields.io/github/actions/workflow/status/kevinoid/nodecat/node.js.yml?branch=main&amp;style=flat&amp;label=build" alt="Build Status"></a>
+<a href="https://app.codecov.io/gh/kevinoid/nodecat/branch/main"><img src="https://img.shields.io/codecov/c/github/kevinoid/nodecat/main.svg?style=flat" alt="Coverage"></a>
+<a href="https://libraries.io/npm/nodecat"><img src="https://img.shields.io/librariesio/release/npm/nodecat.svg?style=flat" alt="Dependency Status"></a>
 <a href="https://www.npmjs.com/package/nodecat"><img src="https://img.shields.io/node/v/nodecat.svg?style=flat" alt="Supported Node Version"></a>
 <a href="https://www.npmjs.com/package/nodecat"><img src="https://img.shields.io/npm/v/nodecat.svg?style=flat" alt="Version on NPM"></a></p>
 <p>A Node.js implementation of cat, as <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cat.html">specified by
 POSIX/SUSv3</a>.
 No frills, no buffering, no charset conversion, just cat.</p>
-<h2>Introductory Example</h2><pre class="prettyprint source lang-sh"><code>$ marked README.md | nodecat header.html - footer.html > README.html</code></pre><h2>Features</h2><ul>
+<h2>Introductory Example</h2>
+<pre class="prettyprint source lang-sh"><code>$ marked README.md | nodecat header.html - footer.html > README.html
+</code></pre>
+<h2>Features</h2>
+<ul>
 <li>Supports copying stdin by default or explicitly using the name <code>-</code>.</li>
 <li>Copies all files byte-for-byte without requiring a valid encoding.</li>
 <li>Does not buffer any input or output (beyond any buffering done by the
@@ -66,10 +70,18 @@ nodecat is always unbuffered).</li>
 <li>Asynchronous, non-blocking API to support concurrent use cases and
 caller-provided streams.</li>
 </ul>
-<h2>Installation</h2><p><a href="https://www.npmjs.com/package/nodecat">This package</a> can be
+<h2>Installation</h2>
+<p><a href="https://www.npmjs.com/package/nodecat">This package</a> can be
 installed using <a href="https://www.npmjs.com/">npm</a>, either globally or locally, by
 running:</p>
-<pre class="prettyprint source lang-sh"><code>npm install nodecat</code></pre><h2>Recipes</h2><h3>Concatenate a filename starting with -</h3><pre class="prettyprint source lang-sh"><code>$ nodecat -- -unfortunate-name.html footer.html > combined.html</code></pre><h3>Concatenate to <code>stdout</code> via the API</h3><pre class="prettyprint source lang-js"><code>var nodecat = require('nodecat');
+<pre class="prettyprint source lang-sh"><code>npm install nodecat
+</code></pre>
+<h2>Recipes</h2>
+<h3>Concatenate a filename starting with -</h3>
+<pre class="prettyprint source lang-sh"><code>$ nodecat -- -unfortunate-name.html footer.html > combined.html
+</code></pre>
+<h3>Concatenate to <code>stdout</code> via the API</h3>
+<pre class="prettyprint source lang-js"><code>var nodecat = require('nodecat');
 nodecat(
   ['header.html', '-', 'footer.html'],
   {fileStreams: {'-': process.stdin}},
@@ -80,7 +92,10 @@ nodecat(
       console.error('Done concatenating files.');
     }
   }
-);</code></pre><h3>Concatenate to a <code>stream</code> via the API</h3><p>To concatenate files into a <code>stream.Writable</code> (which may be a
+);
+</code></pre>
+<h3>Concatenate to a <code>stream</code> via the API</h3>
+<p>To concatenate files into a <code>stream.Writable</code> (which may be a
 <code>fs.WriteStream</code>, <code>net.Socket</code>, <code>tty.WriteStream</code>, <code>stream.PassThrough</code>, or
 any other <code>stream.Writable</code> subtype):</p>
 <pre class="prettyprint source lang-js"><code>var nodecat = require('nodecat');
@@ -102,30 +117,41 @@ nodecat(
       console.error('Content:\n', String(outStream.read()));
     }
   }
-);</code></pre><p>Note:  When <code>nodecat</code> is called on large files and <code>stdout</code> is redirected to a
+);
+</code></pre>
+<p>Note:  When <code>nodecat</code> is called on large files and <code>stdout</code> is redirected to a
 file, it may be useful to use <code>fs.createWriteStream('-', {fd: 1})</code> instead of
 <code>process.stdout</code>, which does <a href="https://nodejs.org/api/process.html#process_process_stdout">synchronous
 writes</a>.  Be sure
 to end the stream before exiting.</p>
 <p>More examples can be found in the <a href="https://kevinoid.github.io/nodecat/spec">test
 specifications</a>.</p>
-<h2>API Docs</h2><p>To use this module as a library, see the <a href="https://kevinoid.github.io/nodecat/api">API
+<h2>API Docs</h2>
+<p>To use this module as a library, see the <a href="https://kevinoid.github.io/nodecat/api">API
 Documentation</a>.</p>
-<h2>Contributing</h2><p>Contributions are welcome and very much appreciated!  Please add tests to
-cover any changes and ensure <code>npm test</code> passes.</p>
+<h2>Contributing</h2>
+<p>Contributions are appreciated.  Contributors agree to abide by the <a href="https://www.contributor-covenant.org/version/1/4/code-of-conduct.html">Contributor
+Covenant Code of
+Conduct</a>.
+If this is your first time contributing to a Free and Open Source Software
+project, consider reading <a href="https://opensource.guide/how-to-contribute/">How to Contribute to Open
+Source</a>
+in the Open Source Guides.</p>
 <p>If the desired change is large, complex, backwards-incompatible, can have
 significantly differing implementations, or may not be in scope for this
 project, opening an issue before writing the code can avoid frustration and
 save a lot of time and effort.</p>
-<h2>Alternatives</h2><p>If nodecat does not satisfy your needs, you may want to consider these
+<h2>Alternatives</h2>
+<p>If nodecat does not satisfy your needs, you may want to consider these
 alternatives:</p>
 <ul>
 <li><a href="https://www.npmjs.com/package/cash-cat">cash-cat</a></li>
 <li><a href="https://www.npmjs.com/package/minicat">minicat</a></li>
 <li><a href="https://www.npmjs.com/package/posix-cat">posix-cat</a></li>
 </ul>
-<h2>License</h2><p>This package is available under the terms of the
-<a href="https://opensource.org/licenses/MIT">MIT License</a>.</p></article>
+<h2>License</h2>
+<p>This project is available under the terms of the <a href="LICENSE.txt">MIT License</a>.
+See the <a href="https://tldrlegal.com/license/mit-license">summary at TLDRLegal</a>.</p></article>
     </section>
 
 
@@ -136,13 +162,13 @@ alternatives:</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AggregateError.html">AggregateError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#nodecat">nodecat</a></li><li><a href="global.html#nodecatCmd">nodecatCmd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-nodecat.html">nodecat</a></li><li><a href="nodecat_bin_nodecat.module_js.html">js</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jun 29 2018 16:33:42 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 15:16:25 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

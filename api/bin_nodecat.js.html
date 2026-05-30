@@ -32,12 +32,15 @@
  *
  * @copyright Copyright 2016 Kevin Locke &lt;kevin@kevinlocke.name>
  * @license MIT
+ * @module nodecat/bin/nodecat.js
  */
 
 'use strict';
 
-const assert = require('assert');
+const assert = require('node:assert');
 
+// https://github.com/import-js/eslint-plugin-import/issues/2844
+// eslint-disable-next-line import/extensions
 const nodecat = require('..');
 
 function usage() {
@@ -72,44 +75,45 @@ function parseArgs(args) {
 /** Options for command entry points.
  *
  * @typedef {{
- *   inStream: (stream.Readable|undefined),
- *   outStream: (stream.Writable|undefined),
- *   errStream: (stream.Writable|undefined)
+ *   inStream: (module:stream.Readable|undefined),
+ *   outStream: (module:stream.Writable|undefined),
+ *   errStream: (module:stream.Writable|undefined)
  * }} CommandOptions
- * @property {stream.Readable=} inStream Stream from which the file named '-'
- * (also the default if no file names are given) is read.
+ * @property {module:stream.Readable=} inStream Stream from which the file
+ * named '-' (also the default if no file names are given) is read.
  * (default: &lt;code>process.stdin&lt;/code>)
- * @property {stream.Writable=} outStream Stream to which output is written.
- * (default: &lt;code>process.stdout&lt;/code>)
- * @property {stream.Writable=} errStream Stream to which errors (and
+ * @property {module:stream.Writable=} outStream Stream to which output is
+ * written.  (default: &lt;code>process.stdout&lt;/code>)
+ * @property {module:stream.Writable=} errStream Stream to which errors (and
  * non-output status messages) are written.
  * (default: &lt;code>process.stderr&lt;/code>)
  */
 // var CommandOptions;
 
-/** Entry point for this command.
+/**
+ * Entry point for this command.
  *
  * @param {!Array&lt;string>} args Command-line arguments.
  * @param {CommandOptions=} options Options.
- * @param {?function(Error, number=)=}
- * callback Callback for the exit code or an &lt;code>Error&lt;/code>.  Required if
- * &lt;code>global.Promise&lt;/code> is not defined.
- * @return {Promise&lt;number>|undefined} If &lt;code>callback&lt;/code> is not given
+ * @param {?function(Error, number=)=} callback Callback for the exit code or
+ * an &lt;code>Error&lt;/code>.  Required if &lt;code>global.Promise&lt;/code> is not
+ * defined.
+ * @returns {Promise&lt;number>|undefined} If &lt;code>callback&lt;/code> is not given
  * and &lt;code>global.Promise&lt;/code> is defined, a &lt;code>Promise&lt;/code> with the
  * exit code or &lt;code>Error&lt;/code>.
  */
 function nodecatCmd(args, options, callback) {
   if (!callback &amp;&amp; typeof options === 'function') {
     callback = options;
-    options = null;
+    options = undefined;
   }
 
   if (!callback &amp;&amp; typeof Promise === 'function') {
-    return new Promise(((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       nodecatCmd(args, options, (err, result) => {
         if (err) { reject(err); } else { resolve(result); }
       });
-    }));
+    });
   }
 
   if (typeof callback !== 'function') {
@@ -124,7 +128,7 @@ function nodecatCmd(args, options, callback) {
     options = {
       inStream: (options &amp;&amp; options.inStream) || process.stdin,
       outStream: (options &amp;&amp; options.outStream) || process.stdout,
-      errStream: (options &amp;&amp; options.errStream) || process.stderr
+      errStream: (options &amp;&amp; options.errStream) || process.stderr,
     };
 
     if (!options.inStream || typeof options.inStream.pipe !== 'function') {
@@ -137,7 +141,7 @@ function nodecatCmd(args, options, callback) {
       throw new TypeError('options.errStream must be a stream.Writable');
     }
   } catch (err) {
-    process.nextTick(() => {
+    queueMicrotask(() => {
       callback(err);
     });
     return undefined;
@@ -148,7 +152,9 @@ function nodecatCmd(args, options, callback) {
     fileNames = parseArgs(args);
   } catch (errArgs) {
     options.errStream.write(`nodecat: ${errArgs.message}\n${usage()}`);
-    process.nextTick(() => { callback(null, 1); });
+    // Use null to preserve existing behavior
+    // eslint-disable-next-line unicorn/no-null
+    queueMicrotask(() => { callback(null, 1); });
     return undefined;
   }
 
@@ -160,12 +166,14 @@ function nodecatCmd(args, options, callback) {
   const catOptions = {
     errStream: options.errStream,
     fileStreams: {
-      '-': options.inStream
+      '-': options.inStream,
     },
-    outStream: options.outStream
+    outStream: options.outStream,
   };
   nodecat(fileNames, catOptions, (err) => {
     // Note:  Error message, if any, was printed when it occurred
+    // Use null to preserve existing behavior
+    // eslint-disable-next-line unicorn/no-null
     callback(null, err ? 1 : 0);
   });
   return undefined;
@@ -175,15 +183,15 @@ module.exports = nodecatCmd;
 
 if (require.main === module) {
   // This file was invoked directly.
-  /* eslint-disable no-process-exit */
+
   const mainOptions = {
     inStream: process.stdin,
     outStream: process.stdout,
-    errStream: process.stderr
+    errStream: process.stderr,
   };
   nodecatCmd(process.argv, mainOptions, (err, code) => {
     assert.ifError(err);
-    process.exit(code);
+    process.exitCode = code;
   });
 }
 </code></pre>
@@ -196,13 +204,13 @@ if (require.main === module) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AggregateError.html">AggregateError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#nodecat">nodecat</a></li><li><a href="global.html#nodecatCmd">nodecatCmd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-nodecat.html">nodecat</a></li><li><a href="nodecat_bin_nodecat.module_js.html">js</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jun 29 2018 16:33:42 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 15:16:25 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

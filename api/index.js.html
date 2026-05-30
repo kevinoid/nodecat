@@ -27,55 +27,28 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @copyright Copyright 2016 Kevin Locke &lt;kevin@kevinlocke.name>
+ * @copyright Copyright 2016-2020 Kevin Locke &lt;kevin@kevinlocke.name>
  * @license MIT
+ * @module nodecat
  */
 
 'use strict';
 
-const fs = require('fs');
-
-const AggregateError = require('./lib/aggregate-error');
-
-/** Combines one or more errors into a single error.
- *
- * @param {AggregateError|Error} errPrev Previous errors, if any.
- * @param {!Error} errNew New error.
- * @return {!AggregateError|!Error} Error which represents all errors that have
- * occurred.  If only one error has occurred, it will be returned.  Otherwise
- * an {@link AggregateError} including all previous errors will be returned.
- * @private
- */
-function combineErrors(errPrev, errNew) {
-  if (!errPrev) {
-    return errNew;
-  }
-
-  let errCombined;
-  if (errPrev instanceof AggregateError) {
-    errCombined = errPrev;
-  } else {
-    errCombined = new AggregateError();
-    errCombined.push(errPrev);
-  }
-
-  errCombined.push(errNew);
-  return errCombined;
-}
+const fs = require('node:fs');
 
 /** Options for {@link nodecat}.
  *
  * @typedef {{
- *   fileStreams: (Object&lt;string,!stream.Readable>|undefined),
- *   outStream: (stream.Writable|undefined),
- *   errStream: (stream.Writable|undefined)
- * }} CommandOptions
- * @property {Object&lt;string,!stream.Readable>=} fileStreams Mapping from file
- * names to readable streams which will be read for the named file.  If the
- * file appears multiple times, the stream is only read once.
- * @property {stream.Writable=} outStream Stream to which concatenated output
- * is written. (default: &lt;code>process.stdout&lt;/code>)
- * @property {stream.Writable=} errStream Stream to which errors (and
+ *   fileStreams: (Object&lt;string,!module:stream.Readable>|undefined),
+ *   outStream: (module:stream.Writable|undefined),
+ *   errStream: (module:stream.Writable|undefined)
+ * }} NodecatOptions
+ * @property {Object&lt;string,!module:stream.Readable>=} fileStreams Mapping from
+ * file names to readable streams which will be read for the named file.  If
+ * the file appears multiple times, the stream is only read once.
+ * @property {module:stream.Writable=} outStream Stream to which concatenated
+ * output is written. (default: &lt;code>process.stdout&lt;/code>)
+ * @property {module:stream.Writable=} errStream Stream to which errors (and
  * non-output status messages) are written.
  * (default: &lt;code>process.stderr&lt;/code>)
  */
@@ -91,14 +64,14 @@ function combineErrors(errPrev, errNew) {
  * &lt;code>Error&lt;/code> which occurred, if any.  Note that concatenation
  * continues after errors.  Required if &lt;code>global.Promise&lt;/code> is not
  * defined.
- * @return {Promise|undefined} If &lt;code>callback&lt;/code> is not given and
+ * @returns {Promise|undefined} If &lt;code>callback&lt;/code> is not given and
  * &lt;code>global.Promise&lt;/code> is defined, a &lt;code>Promise&lt;/code> which
  * resolves once all output has been written.
  */
 function nodecat(fileNames, options, callback) {
   if (!callback &amp;&amp; typeof options === 'function') {
     callback = options;
-    options = null;
+    options = undefined;
   }
 
   if (!callback) {
@@ -120,8 +93,8 @@ function nodecat(fileNames, options, callback) {
 
   try {
     if (!fileNames
-        || typeof fileNames !== 'object'
-        || fileNames.length !== Math.floor(fileNames.length)) {
+      || typeof fileNames !== 'object'
+      || fileNames.length !== Math.floor(fileNames.length)) {
       throw new TypeError('fileNames must be an Array-like object');
     }
     if (options &amp;&amp; typeof options !== 'object') {
@@ -137,25 +110,36 @@ function nodecat(fileNames, options, callback) {
       throw new TypeError('options.errStream must be a stream.Writable');
     }
   } catch (err) {
-    process.nextTick(() => {
+    queueMicrotask(() => {
       callback(err);
     });
     return undefined;
   }
 
-  // Error which will be returned from nodecat
-  let errNodecat = null;
+  // Errors encountered during this nodecat invocation
+  const errors = [];
+
   // Cleanup function for the currently piping input stream
   let inCleanup;
 
   function allDone() {
+    // eslint-disable-next-line no-use-before-define
     outStream.removeListener('error', onOutError);
-    callback(errNodecat);
+    callback(
+      // Use null for compatibility with previous versions
+      // eslint-disable-next-line unicorn/no-null
+      errors.length === 0 ? null
+        : errors.length === 1 ? errors[0]
+          : new AggregateError(
+            errors,
+            errors.map((err) => err.message).join('\n'),
+          ),
+    );
   }
 
   // Note:  src.unpipe is called by stream.Readable internals on dest 'error'
   function onOutError(err) {
-    errNodecat = combineErrors(errNodecat, err);
+    errors.push(err);
     errStream.write(`nodecat: ${err}\n`);
     if (inCleanup) {
       inCleanup();
@@ -181,11 +165,6 @@ function nodecat(fileNames, options, callback) {
 
     const inStream = callerStream || fs.createReadStream(fileName);
 
-    inCleanup = function cleanup() {
-      inStream.removeListener('error', onInError);
-      inStream.removeListener('end', done);
-    };
-
     function done() {
       if (callerStream) {
         callerStreamEnded[fileName] = true;
@@ -193,11 +172,12 @@ function nodecat(fileNames, options, callback) {
       inCleanup();
       catNext();
     }
+    inStream.once('end', done);
 
     function onInError(err) {
       // Mark error with the name of the file which caused it
       err.fileName = fileName;
-      errNodecat = combineErrors(errNodecat, err);
+      errors.push(err);
       errStream.write(`nodecat: ${fileName}: ${err.message}\n`);
       // There is no way to know whether more data may be emitted.
       // To be safe, unpipe to prevent interleaving data after starting next.
@@ -207,9 +187,13 @@ function nodecat(fileNames, options, callback) {
       done();
     }
     inStream.once('error', onInError);
-    inStream.once('end', done);
 
-    inStream.pipe(outStream, {end: false});
+    inCleanup = function cleanup() {
+      inStream.removeListener('error', onInError);
+      inStream.removeListener('end', done);
+    };
+
+    inStream.pipe(outStream, { end: false });
   }
 
   catNext();
@@ -227,13 +211,13 @@ module.exports = nodecat;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AggregateError.html">AggregateError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#nodecat">nodecat</a></li><li><a href="global.html#nodecatCmd">nodecatCmd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-nodecat.html">nodecat</a></li><li><a href="nodecat_bin_nodecat.module_js.html">js</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jun 29 2018 16:33:42 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 15:16:25 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
