@@ -27,7 +27,7 @@
     "!**/.*"
   ],
   "main": "index.js",
-  "// Next major version will declare exports": {
+  "exports": {
     ".": "./index.js",
     "./package.json": "./package.json"
   },
