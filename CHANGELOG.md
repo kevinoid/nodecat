@@ -1,5 +1,25 @@
 # Change Log
 
+## [3.0.0](https://github.com/kevinoid/nodecat/compare/v2.0.0...v3.0.0) (2026-05-30)
+
+### BREAKING CHANGES
+
+* Require Node.js 20 || >=22 ([e735d3b](https://github.com/kevinoid/nodecat/commit/e735d3bc732fc448b9afddff7f5f580daf1d136a))
+* package.json: Declare exports ([90f33af](https://github.com/kevinoid/nodecat/commit/90f33afbd3e58c65ea2f818a8d91817548f529c0))
+
+### Bug Fixes
+
+* yargs-parser greedy-arrays: false ([7124a02](https://github.com/kevinoid/nodecat/commit/7124a02f9b2d3934ab12a357a6bfc3da649256a6))
+
+### Features
+
+* implement trusted publishing from GitHub ([b9e2320](https://github.com/kevinoid/nodecat/commit/b9e232073b3008e7eefb79e490c4eff4abfa34d0))
+* **package:** use git+https for repository.url ([00aebae](https://github.com/kevinoid/nodecat/commit/00aebae8d76588b50b7de5139f104b02d93d701a))
+* Use process.exitCode instead of process.exit() ([28cd68d](https://github.com/kevinoid/nodecat/commit/28cd68d678d70b4fa7b95bee4b47fcd5262d624c))
+* switch from nyc to c8 for native V8 coverage ([d72a313](https://github.com/kevinoid/nodecat/commit/d72a3136254166eda40fb56c550283758c25ac1f))
+* Use native AggregateError ([a511b74](https://github.com/kevinoid/nodecat/commit/a511b742c4a8a062e6a2e3682e047ee41dd43612))
+
+
 ## [v2.0.0](https://github.com/kevinoid/nodecat/tree/v2.0.0) (2018-06-29)
 [Full Changelog](https://github.com/kevinoid/nodecat/compare/v1.0.0...v2.0.0)
 
