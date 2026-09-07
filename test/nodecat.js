@@ -13,7 +13,7 @@ const { assert } = require('chai');
 const sinon = require('sinon');
 
 // https://github.com/import-js/eslint-plugin-import/issues/2844
-// eslint-disable-next-line import/extensions
+// eslint-disable-next-line import-x/extensions
 const nodecat = require('..');
 
 const filePath = path.resolve(__dirname, '..', 'package.json');
