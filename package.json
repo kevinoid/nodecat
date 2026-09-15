@@ -56,7 +56,7 @@
     "version-deps": "npm install conventional-changelog-cli david depcheck git-branch-is hub-ci-status"
   },
   "devDependencies": {
-    "@kevinoid/eslint-config": "^34.0.0",
+    "@kevinoid/eslint-config": "^35.3.0",
     "c8": "^12.0.0",
     "chai": "^6.0.0",
     "eslint": "^9.35.0",
