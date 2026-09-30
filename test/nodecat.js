@@ -426,7 +426,7 @@ describe('nodecat', () => {
     assert(result instanceof globalThis.Promise);
   });
 
-  it('returned Promise is resolved after writing', () => {
+  it('returned Promise is resolved after writing', async () => {
     let haveEnd = false;
     const inStream = new stream.PassThrough();
     const options = {
@@ -440,20 +440,23 @@ describe('nodecat', () => {
       haveEnd = true;
       inStream.end();
     });
-    return nodecat(['-'], options).then(() => {
-      assert(haveEnd);
-    });
+    await nodecat(['-'], options);
+    assert(haveEnd);
   });
 
-  it('returned Promise is rejected with argument Error', () => {
-    const result = nodecat([], true);
-    return result.then(
-      sinon.mock().never(),
-      (err) => { assert.instanceOf(err, TypeError); },
-    );
+  it('returned Promise is rejected with argument Error', async () => {
+    const promise = nodecat([], true);
+    try {
+      await promise;
+    } catch (err) {
+      assert.instanceOf(err, TypeError);
+      return;
+    }
+
+    sinon.mock().never();
   });
 
-  it('returned Promise is rejected with read Error', () => {
+  it('returned Promise is rejected with read Error', async () => {
     const errTest = new Error('test error');
     const inStream = new stream.PassThrough();
     const options = {
@@ -466,13 +469,19 @@ describe('nodecat', () => {
     setImmediate(() => {
       inStream.emit('error', errTest);
     });
-    return nodecat(['-'], options).then(
-      sinon.mock().never(),
-      (err) => { assert.strictEqual(err, errTest); },
-    );
+
+    const promise = nodecat(['-'], options);
+    try {
+      await promise;
+    } catch (err) {
+      assert.strictEqual(err, errTest);
+      return;
+    }
+
+    sinon.mock().never();
   });
 
-  it('returned Promise is rejected with write Error', () => {
+  it('returned Promise is rejected with write Error', async () => {
     const errTest = new Error('test error');
     const options = {
       fileStreams: {
@@ -484,9 +493,15 @@ describe('nodecat', () => {
     setImmediate(() => {
       options.outStream.emit('error', errTest);
     });
-    return nodecat(['-'], options).then(
-      sinon.mock().never(),
-      (err) => { assert.strictEqual(err, errTest); },
-    );
+
+    const promise = nodecat(['-'], options);
+    try {
+      await promise;
+    } catch (err) {
+      assert.strictEqual(err, errTest);
+      return;
+    }
+
+    sinon.mock().never();
   });
 });

@@ -202,7 +202,7 @@ describe('nodecat command', () => {
     assert(result instanceof globalThis.Promise);
   });
 
-  it('returned Promise is resolved with exit code', () => {
+  it('returned Promise is resolved with exit code', async () => {
     nodecat = sinon.stub();
     const options = {
       outStream: new stream.PassThrough(),
@@ -210,17 +210,20 @@ describe('nodecat command', () => {
     };
     const result = nodecatCmd(RUNTIME_ARGS, options);
     nodecat.yield(null);
-    return result.then((code) => {
-      assert.strictEqual(code, 0);
-    });
+    const code = await result;
+    assert.strictEqual(code, 0);
   });
 
-  it('returned Promise is rejected with Error', () => {
+  it('returned Promise is rejected with Error', async () => {
     nodecat = sinon.stub();
     const result = nodecatCmd(RUNTIME_ARGS, true);
-    return result.then(
-      sinon.mock().never(),
-      (err) => { assert.instanceOf(err, TypeError); },
-    );
+    try {
+      await result;
+    } catch (err) {
+      assert.instanceOf(err, TypeError);
+      return;
+    }
+
+    sinon.mock().never();
   });
 });
