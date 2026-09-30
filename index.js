@@ -130,7 +130,7 @@ function nodecat(fileNames, options, callback) {
     const fileName = fileNames[i];
     i += 1;
     const callerStream = callerStreams[fileName];
-    if (callerStream && callerStreamEnded[fileName]) {
+    if (callerStream && Object.hasOwn(callerStreamEnded, fileName)) {
       catNext();
       return;
     }
