@@ -199,6 +199,7 @@ describe('nodecat command', () => {
   it('returns a Promise when called without a function', () => {
     nodecat = sinon.stub();
     const result = nodecatCmd(RUNTIME_ARGS);
+    // eslint-disable-next-line unicorn/no-unnecessary-global-this
     assert(result instanceof globalThis.Promise);
   });
 

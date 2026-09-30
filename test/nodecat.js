@@ -423,6 +423,7 @@ describe('nodecat', () => {
 
   it('returns a Promise when called without a function', () => {
     const result = nodecat([]);
+    // eslint-disable-next-line unicorn/no-unnecessary-global-this
     assert(result instanceof globalThis.Promise);
   });
 
