@@ -427,7 +427,7 @@ describe('nodecat', () => {
   });
 
   it('returned Promise is resolved after writing', () => {
-    let ended = false;
+    let haveEnd = false;
     const inStream = new stream.PassThrough();
     const options = {
       fileStreams: {
@@ -437,11 +437,11 @@ describe('nodecat', () => {
       errStream: new stream.PassThrough(),
     };
     setImmediate(() => {
-      ended = true;
+      haveEnd = true;
       inStream.end();
     });
     return nodecat(['-'], options).then(() => {
-      assert(ended);
+      assert(haveEnd);
     });
   });
 

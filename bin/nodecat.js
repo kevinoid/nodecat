@@ -20,17 +20,17 @@ function usage() {
 }
 
 function parseArgs(args) {
-  let dashdash = false;
+  let haveDashDash = false;
 
   return args.slice(2).filter((arg) => {
-    if (dashdash || arg === '-' || arg[0] !== '-') {
+    if (haveDashDash || arg === '-' || arg[0] !== '-') {
       // Non-option argument
       return true;
     }
 
     if (arg === '--') {
       // XBD non-option argument delimiter
-      dashdash = true;
+      haveDashDash = true;
       return false;
     }
 
