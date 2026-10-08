@@ -5,6 +5,7 @@
 
 'use strict';
 
+const { rejects } = require('node:assert');
 const stream = require('node:stream');
 
 const { assert } = require('chai');
@@ -217,14 +218,6 @@ describe('nodecat command', () => {
 
   it('returned Promise is rejected with Error', async () => {
     nodecat = sinon.stub();
-    const result = nodecatCmd(RUNTIME_ARGS, true);
-    try {
-      await result;
-    } catch (err) {
-      assert.instanceOf(err, TypeError);
-      return;
-    }
-
-    sinon.mock().never();
+    await rejects(nodecatCmd(RUNTIME_ARGS, true), TypeError);
   });
 });

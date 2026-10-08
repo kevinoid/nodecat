@@ -5,6 +5,7 @@
 
 'use strict';
 
+const { rejects } = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 const stream = require('node:stream');
@@ -446,15 +447,7 @@ describe('nodecat', () => {
   });
 
   it('returned Promise is rejected with argument Error', async () => {
-    const promise = nodecat([], true);
-    try {
-      await promise;
-    } catch (err) {
-      assert.instanceOf(err, TypeError);
-      return;
-    }
-
-    sinon.mock().never();
+    await rejects(nodecat([], true), TypeError);
   });
 
   it('returned Promise is rejected with read Error', async () => {
@@ -471,15 +464,13 @@ describe('nodecat', () => {
       inStream.emit('error', errTest);
     });
 
-    const promise = nodecat(['-'], options);
-    try {
-      await promise;
-    } catch (err) {
-      assert.strictEqual(err, errTest);
-      return;
-    }
-
-    sinon.mock().never();
+    await rejects(
+      nodecat(['-'], options),
+      (err) => {
+        assert.strictEqual(err, errTest);
+        return true;
+      },
+    );
   });
 
   it('returned Promise is rejected with write Error', async () => {
@@ -495,14 +486,12 @@ describe('nodecat', () => {
       options.outStream.emit('error', errTest);
     });
 
-    const promise = nodecat(['-'], options);
-    try {
-      await promise;
-    } catch (err) {
-      assert.strictEqual(err, errTest);
-      return;
-    }
-
-    sinon.mock().never();
+    await rejects(
+      nodecat(['-'], options),
+      (err) => {
+        assert.strictEqual(err, errTest);
+        return true;
+      },
+    );
   });
 });
